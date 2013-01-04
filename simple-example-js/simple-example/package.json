@@ -1,0 +1,38 @@
+{
+	"name": "simple-example",
+	"version": "1.0",
+	"description": "MOAT IoT Example Application Package",
+	"maintainers": [
+		{
+			"name": "Example Maintainers",
+			"email": "maintainers@example.com"
+		}
+	],
+	"bugs": {
+		"mail": "bugs@example.com"
+	},
+	"notification" : { "http" : "http://localhost:3000/request_histories" },
+	"models" : {
+		"ShakeEvent" : {
+			"name" : "ShakeEvent",
+			"array" : true,
+			"attributes" : {
+				"time" : {"type" : "int64"},
+				"x" : {"type" : "float"},
+				"y" : {"type" : "float"},
+				"z" : {"type" : "float"},
+				"acceleration" : {"type" : "float"}
+			}
+		},
+		"VibrationDevice" : {
+			"name" : "VibrationDevice",
+			"array" : false,
+			"attributes" : {
+				"image" : {"type" : "resource"}
+			},
+			"commands" : {
+				"vibrate" : {"paramType" : "string"}
+			}
+		}
+	}
+}

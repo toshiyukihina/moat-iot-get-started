@@ -4,9 +4,9 @@ This is an example application using MOAT IoT API set.
 
 The application is composed of 3 parts:
 
- 1. An Android project using MOAT Java/Android
- 2. Server side Javascripts using MOAT js
- 3. Rails application using MOAT REST
+ 1. An Android project using [MOAT Java](http://dev.yourinventit.com/references/moat-java-api-document)
+ 2. Server side Javascripts using [MOAT js](http://dev.yourinventit.com/references/moat-js-api-document)
+ 3. Rails application using [MOAT REST](http://dev.yourinventit.com/references/moat-rest-api-document)
 
 You need to sign up Inventit IoT Developer Network Sandbox Server in order to deploy the application.
 
