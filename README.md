@@ -10,6 +10,8 @@ The application is composed of 3 parts:
 
 You need to sign up Inventit IoT Developer Network Sandbox Server in order to deploy the application.
 
+(The server runtime environment will be available when [IIDN Command Line Tool](https://github.com/inventit/iidn-cli) is rolled out.)
+
 The sign-up process is included in [this tutorial](http://dev.yourinventit.com/guides/get-started) as well.
 
 ## Get Started
