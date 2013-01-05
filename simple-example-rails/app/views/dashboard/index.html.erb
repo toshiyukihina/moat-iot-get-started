@@ -1,0 +1,136 @@
+<h1><%= image_tag "moat_icon.png", size: "36x36", alt: "MOAT IoT icon", style: "vertical-align: -12%;" %> MOAT IoT Simple Example App</h1>
+
+<h2>Resource Example</h2>
+<table class="table table-striped table-bordered table-condensed">
+  <tr>
+    <th>Image</th>
+  </tr>
+  <% @vibration_devices.each do |vd| %>
+  <tr>
+	<td><%= image_tag(vd.image) %></td>
+  </tr>
+  </tr>
+  <% end %>
+</table>
+
+<h2>Devices</h2>
+<% if @devices.empty? %>
+<p>
+	Install the gateway app and the example Android app into your Android phone.
+	Then tap the <%= image_tag("moat_icon.png", size: "20x20", alt: "MOAT IoT icon") %> icon.
+</p>
+<% end %>
+<% @devices.each do |d| %>
+<table class="table table-striped table-bordered table-condensed">
+  <tr>
+    <th>Name</th>
+    <th>Device ID</th>
+    <th>Commands</th>
+  </tr>
+  <tr>
+	<td><%= d.name %></td>
+	<td><%= d.device_id %></td>
+    <td>
+      <%= link_to({controller: "dashboard", action: "vibrate", name: d.name}, class: 'btn btn-primary') do %>
+		Morse Code <i class='icon-play-circle icon-white'></i>
+	  <% end %>
+      <%= link_to({controller: "dashboard", action: "delete_device", device_uid: d.uid}, class: 'btn') do %>
+		Delete <i class='icon-off icon-white'></i>
+	  <% end %>
+    </td>
+  </tr>
+</table>
+<h3>Shake Event History for <%= d.name %></h3>
+<%
+# Building a comma separated string
+uids = []
+@shake_events[d.name].each do |se|
+  uids << se.uid
+end
+%>
+<table class="table">
+	<tr>
+		<td>
+			<%= link_to({controller: "dashboard", action: "delete_all_shake_events", uids: uids.join(','), device_uid: d.uid}, class: 'btn btn-primary') do %>
+			Clear <i class='icon-fire icon-white'></i>
+			<% end %>
+		</td>
+	</tr>
+</table>
+<table class="table table-striped table-bordered table-condensed">
+  <tr>
+    <th>Time</th>
+    <th>X</th>
+    <th>Y</th>
+    <th>Z</th>
+    <th>Acceleration</th>
+  </tr>
+  <% @shake_events[d.name].each do |se| %>
+  <tr>
+	<td><%= Time.at(se.time.to_i / 1000) if se.time %></td>
+	<td><%= se.x %></td>
+	<td><%= se.y %></td>
+	<td><%= se.z %></td>
+	<td><%= se.acceleration %></td>
+  </tr>
+  <% end %>
+</table>
+<hr/>
+ <% end %>
+
+<h2>Active Requests</h2>
+<table class="table table-striped table-bordered table-condensed">
+  <tr>
+    <th>Device Name</th>
+    <th>Status</th>
+    <th>Type</th>
+    <th>Started At</th>
+    <th>Expired At</th>
+    <th>Action</th>
+  </tr>
+  <% @job_list.each do |j| %>
+  <tr>
+	<td><%= j.name %></td>
+	<td><%= j.status %></td>
+	<td><%= j.job_service_id %></td>
+	<td><%= Time.rfc2822(j.started_at).localtime if j.started_at %></td>
+	<td><%= Time.rfc2822(j.expired_at).localtime if j.expired_at %></td>
+    <td>
+      <%= link_to({controller: "dashboard", action: "cancel", uid: j.uid}, class: 'btn btn-primary') do %>
+		Cancel <i class='icon-remove-sign icon-white'></i>
+	  <% end %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+
+<h2>Request History</h2>
+<% unless @job_histories.empty? %>
+<table class="table">
+	<tr>
+		<td>
+			<%= link_to({controller: "request_histories", action: "delete_all"}, class: 'btn btn-primary') do %>
+			Clear <i class='icon-fire icon-white'></i>
+			<% end %>
+		</td>
+	</tr>
+</table>
+<% end %>
+<table class="table table-striped table-bordered table-condensed">
+  <tr>
+    <th>Device Name</th>
+    <th>Status</th>
+    <th>Type</th>
+    <th>Started At</th>
+    <th>Ended At</th>
+  </tr>
+  <% @job_histories.each do |j| %>
+  <tr>
+	<td><%= j.name %></td>
+	<td><%= j.status %></td>
+	<td><%= j.job_service_id %></td>
+	<td><%= j.started_at.localtime %></td>
+	<td><%= j.ended_at.localtime %></td>
+  </tr>
+  <% end %>
+</table>
