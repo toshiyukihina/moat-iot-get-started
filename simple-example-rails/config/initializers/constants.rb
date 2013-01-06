@@ -1,7 +1,7 @@
 module Moat
 
   # MOAT REST API
-  REST_URI = "http://localhost:7120"
+  REST_URI = "https://sandbox.service-sync.com"
   REST_PATH = "/moat/v1"
   PACKAGE_ID = "simple-example"
   
