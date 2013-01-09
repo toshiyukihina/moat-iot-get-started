@@ -14,7 +14,6 @@
 	"notification" : { "http" : "http://localhost:3000/request_histories" },
 	"models" : {
 		"ShakeEvent" : {
-			"name" : "ShakeEvent",
 			"array" : true,
 			"attributes" : {
 				"time" : {"type" : "int64"},
@@ -25,7 +24,6 @@
 			}
 		},
 		"VibrationDevice" : {
-			"name" : "VibrationDevice",
 			"array" : false,
 			"attributes" : {
 				"image" : {"type" : "resource"}
