@@ -12,8 +12,6 @@ You need to sign up Inventit IoT Developer Network Sandbox Server in order to de
 
 (The server runtime environment will be available when [IIDN Command Line Tool](https://github.com/inventit/iidn-cli) is rolled out.)
 
-The sign-up process is included in [this tutorial](http://dev.yourinventit.com/guides/get-started) as well.
-
 ## Get Started
 
 See [the tutorial](http://dev.yourinventit.com/guides/get-started) to learn more.
@@ -36,6 +34,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ![Attribution-NonCommercial 3.0 Unported](http://i.creativecommons.org/l/by-nc/3.0/88x31.png "Attribution-NonCommercial 3.0 Unported")
 
 ## Change History
+
+1.0.2 : January 9, 2013  
+* This README.md is updated
+
+1.0.1 : January 9, 2013  
+* Removes debug codes
+* Adds README.md to each application to describe
+* Updates this doc
+* Applies format changes to package.json
+* Removes the dependency to inventit-dmc-api
 
 1.0.0 : January 5, 2013  
 * Initial Release.
