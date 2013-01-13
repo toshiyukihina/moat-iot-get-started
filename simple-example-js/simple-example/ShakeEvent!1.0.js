@@ -15,6 +15,7 @@ session.log('shake', 'Start ShakeEvent!');
 
 var objects = clientRequest.objects;
 var size = objects.length;
+var count = 0;
 for ( var i = 0; i < size; i++) {
 	var container = objects[i];
 	if (container.array) {
@@ -22,12 +23,14 @@ for ( var i = 0; i < size; i++) {
 		for ( var j = 0; j < array.length; j++) {
 			save(array[j]);
 		}
+		count += array.length;
 	} else {
 		save(container);
+		count++;
 	}
 }
 
-session.log('shake', '=> ' + size + ' objects are stored.');
+session.log('shake', '=> ' + count + ' objects are stored.');
 
 try {
 	session.notifyAsync(objects);

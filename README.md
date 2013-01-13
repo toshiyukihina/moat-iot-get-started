@@ -35,10 +35,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.3 : January 13, 2013  
+
+* Fixes the wrong license term in a file
+* Fixes a bug where the wrong number of objects to be saved is counted in a server side script
+* Fixes the wrong README description regarding library dependency in the Android app
+* Updates Rails to 3.2.11 for the [security fix](http://weblog.rubyonrails.org/2013/1/8/Rails-3-2-11-3-1-10-3-0-19-and-2-3-15-have-been-released/)
+
 1.0.2 : January 9, 2013  
+
 * This README.md is updated
 
 1.0.1 : January 9, 2013  
+
 * Removes debug codes
 * Adds README.md to each application to describe
 * Updates this doc

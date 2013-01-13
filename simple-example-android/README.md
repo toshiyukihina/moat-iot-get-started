@@ -3,12 +3,11 @@ MOAT IoT Application Example
 Simple Example Android Application
 --------
 
-This application requires the following private libraries:
+This application requires the following private libary:
 
-- inventit-dmc-api-4.0.0-prod.jar
 - inventit-dmc-android-lib-api-4.0.0-prod.jar
 
-You can download them via [iidn command line tool](https://github.com/inventit/iidn-cli) (signup required).
+You can download it via [iidn command line tool](https://github.com/inventit/iidn-cli) (signup required).
 
 The following APK must be installed into a device where this application runs.
 
