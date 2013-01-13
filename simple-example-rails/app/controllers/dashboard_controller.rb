@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
     @devices.each do |d|
       @shake_events[d.name] = ShakeEvent.find(:all, params: {
         offset: params[:offset], limit: params[:limit]
-      }, device: d.uid) # device: is a MoatModel class specific argument.
+      }, device: d.uid) || [] # device: is a MoatModel class specific argument.
     end
     @job_list = SysDmjob.find(:all) || []
     @job_histories = RequestHistory.find(:all) || []
