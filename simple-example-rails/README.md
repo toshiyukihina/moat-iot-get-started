@@ -4,7 +4,7 @@ Simple Example Rails Application
 --------
 
 This application is built on top of Rails generated application and is already applied Twitter Bootstrap 2.2.2.
-The version of Rails used here is 3.2.8.
+The version of Rails used here is 3.2.11.
 
 See [the tutorial](http://dev.yourinventit.com/guides/get-started) to learn more.
 
