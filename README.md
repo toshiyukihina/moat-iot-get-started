@@ -35,6 +35,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.4 : January 16, 2013  
+
+* Fixes an issue where a Moat instance is not shutdown on MoatIoTService is destroyed
+
 1.0.3 : January 13, 2013  
 
 * Fixes the wrong license term in a file

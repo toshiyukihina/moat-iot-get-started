@@ -210,12 +210,14 @@ public class MoatIoTService extends Service {
 			MoatIoTService.motionSensorListener = null;
 		}
 
-		if (moat != null) {
+		final MoatAndroidFactory factory = MoatAndroidFactory.getInstance();
+		if (factory.isValid(moat)) {
 			// Remove unused model descriptors
 			moat.removeModel(ShakeEvent.class);
 			moat.removeModel(VibrationDevice.class);
-			moat = null;
 		}
+		factory.destroyMoat(moat);
+		moat = null;
 		LOGGER.info("onDestroy(): Done!");
 	}
 
