@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
   
   def index
-    @vibration_devices = VibrationDevice.find(:all, params: { r: "get"}) || []
+    @vibration_devices = VibrationDevice.find(:all, params: { r: "get", f: "image"}) || []
     @shake_events = {}
     @devices = SysDevice.find || []
     @devices.each do |d|
