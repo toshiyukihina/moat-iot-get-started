@@ -35,6 +35,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.5 : January 26, 2013
+
+* Fixes an issue where authentication token is always missing when DELETE method to /sys/auth object is issued (Rails App)
+* Fixes an issue where a resource type attribute is not retrieved because of missing 'f' parameter for specifying the attribute (Rails App)
+* Fixes an issue where get/put/post/delete cannot be attribute accessors as they are already defined in [activeresource/lib/active_resource/custom_methods.rb](http://api.rubyonrails.org/classes/ActiveResource/CustomMethods.html) (Rails App)
+* Fixes an issue where the image URL is obtained via an Image object itself rather than the 'get' property of the Image object (Rails App)
+
 1.0.4 : January 16, 2013  
 
 * Fixes an issue where a Moat instance is not shutdown on MoatIoTService is destroyed
