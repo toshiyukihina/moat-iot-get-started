@@ -7,7 +7,7 @@
   </tr>
   <% @vibration_devices.each do |vd| %>
   <tr>
-	<td><%= image_tag(vd.image) %></td>
+	<td><%= vd.image.type %> : <%= image_tag(vd.image.get) %></td>
   </tr>
   </tr>
   <% end %>
