@@ -38,4 +38,28 @@ module MoatRest
     hash
   end
 
+  # Override as the method is used as an attribute accessor as well.
+  def get(*args)
+    return @attributes[:get] if args.empty?
+    super(args)
+  end
+
+  # Override as the method is used as an attribute accessor as well.
+  def put(*args)
+    return @attributes[:put] if args.empty?
+    super(args)
+  end
+
+  # Override as the method is used as an attribute accessor as well.
+  def post(*args)
+    return @attributes[:post] if args.empty?
+    super(args)
+  end
+
+  # Override as the method is used as an attribute accessor as well.
+  def delete(*args)
+    return @attributes[:delete] if args.empty?
+    super(args)
+  end
+
 end
