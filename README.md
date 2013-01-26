@@ -35,6 +35,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.6 : January 27, 2013
+
+* Fixes an issue where authentication info isn't retained in static scope but in instance scope of MOAT REST ActiveResource models (Rails App)
+
 1.0.5 : January 26, 2013
 
 * Fixes an issue where authentication token is always missing when DELETE method to /sys/auth object is issued (Rails App)

@@ -3,9 +3,35 @@
 #
 class MoatModel < ActiveResource::Base
   include MoatRest
-  extend MoatRestAuth
+
+  mattr_accessor :guard, :sys_auth, :last_accessed
+  self.guard = Mutex.new
+  self.sys_auth = nil
+  self.last_accessed = 0
+
   self.site = Moat::REST_URI
   self.prefix = "#{Moat::REST_PATH}/#{Moat::PACKAGE_ID}/"
+
+  # Returns/Sets the authenticity token
+  def self.auth_token
+    now = Time.now
+    self.guard.synchronize do
+      unless self.sys_auth
+        self.last_accessed = now
+        self.sys_auth = SysAuth.find
+      else
+        if now - self.last_accessed > 60 * 25
+          begin
+            self.sys_auth.destroy
+          rescue ActiveResource::UnauthorizedAccess
+            # ignorable
+          end
+          self.sys_auth = SysAuth.find
+        end
+      end
+    end
+    self.sys_auth.access_token
+  end
   
   # Override because of missing attribute values
   def method_missing(meth, *args, &block)
