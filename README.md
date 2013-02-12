@@ -35,6 +35,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.7 : February 12, 2013
+
+* Fixes an issue where OpenJDK fails to compile simple-example-android module because of OpenJDK specific issue (http://stackoverflow.com/a/9590042)
+
 1.0.6 : January 27, 2013
 
 * Fixes an issue where authentication info isn't retained in static scope but in instance scope of MOAT REST ActiveResource models (Rails App)
