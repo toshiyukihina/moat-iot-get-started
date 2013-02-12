@@ -49,7 +49,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public RuntimeExceptionDao<ShakeEvent, String> getShakeEventDao() {
 		if (this.shakeEventDao == null) {
-			this.shakeEventDao = getRuntimeExceptionDao(ShakeEvent.class);
+			// Workaround for the issue: http://stackoverflow.com/a/9590042
+            final RuntimeExceptionDao dao = getRuntimeExceptionDao(ShakeEvent.class);
+            this.shakeEventDao = (RuntimeExceptionDao<ShakeEvent, String>) dao;
 		}
 		return shakeEventDao;
 	}
