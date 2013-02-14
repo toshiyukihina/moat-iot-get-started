@@ -16,6 +16,16 @@ You need to sign up Inventit IoT Developer Network Sandbox Server in order to de
 
 See [the tutorial](http://dev.yourinventit.com/guides/get-started) to learn more.
 
+## Setup Helper
+
+As of 1.0.8, a setup helper script is included, which helps you to prepare building environment.
+
+After signing up to IIDN, on the root of this project (same as where this README.md is) enter:
+
+    moat-iot-get-started:$ rake
+
+After a couple of minutes, the script will be terminated. And you need to run a few commands regarding signing secure token. The detailed commands are shown on the script log message. You can copy and paste the commands to run.
+
 ## Source Code License
 
 All program source codes except MOAT IoT App Icon files are available under the MIT style License.
@@ -34,6 +44,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ![Attribution-NonCommercial 3.0 Unported](http://i.creativecommons.org/l/by-nc/3.0/88x31.png "Attribution-NonCommercial 3.0 Unported")
 
 ## Change History
+
+1.0.8 : February 1?, 2013
+
+* Adds [Vagrant](http://www.vagrantup.com/) support. Now you are free from preparing get-started app environment
+* Adds the setup helper script
 
 1.0.7 : February 12, 2013
 
