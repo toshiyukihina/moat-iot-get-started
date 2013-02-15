@@ -45,10 +45,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
-1.0.8 : February 1?, 2013
+1.0.8 : February 15, 2013
 
 * Adds [Vagrant](http://www.vagrantup.com/) support. Now you are free from preparing get-started app environment
 * Adds the setup helper script
+* Adds MOAT js helper script to create a zip package and to perform unit tests
 
 1.0.7 : February 12, 2013
 
