@@ -6,7 +6,7 @@
  3. create a debug key
  4. download a secure token
  5. [YOU] sign it with a debug key
- 6. [YOU] mvn clean deploy
+ 6. [YOU] download API jar file and mvn clean deploy
  7. cd js/simple-example
  8. jar cf ../simple-example.zip .
  9. upload the zip file
@@ -19,11 +19,36 @@ Other items than annotated '[YOU]' are performed by `setup` task.
 =end
 
 cred = []
+latest_token = nil
 
 task :default => [:setup]
 
-task :setup => [:get_credentials, :android, :js, :rails] do
-  puts "Done."
+task :setup => [:get_credentials, :js, :android, :rails] do
+  puts "Done.
+
+  Unfortunately, I cannot help you actions regarding security token.
+  Run the following commands respectively later (you can copy and paste them and run respectively).
+  ---
+cd simple-example-android
+keytool -importkeystore -srckeystore $HOME/.android/debug.keystore -destkeystore $HOME/.android/debug.p12 -deststoretype PKCS12
+  => enter 'android' when asked to enter password (asked 3 times)
+openssl pkcs12 -in $HOME/.android/debug.p12 -clcerts -nokeys -out $HOME/.android/debug.pem
+  => enter 'android' when asked to enter password
+openssl pkcs12 -in $HOME/.android/debug.p12 -nocerts -out $HOME/.android/debug.key
+  => enter 'android' when asked to enter password (asked 3 times)
+openssl smime -sign -in #{latest_token} -out assets/moat/signed.bin -signer $HOME/.android/debug.pem -inkey $HOME/.android/debug.key -nodetach -outform der -binary
+  ---
+  Then download API jar and build APK.
+  ---
+iidn sysdownload inventit-dmc-android-lib-api-4.0.0-prod.jar
+  => enter app_id, client_id and cleint_secret again
+mvn install:install-file \
+  -Dfile=inventit-dmc-android-lib-api-4.0.0-prod.jar \
+  -DgroupId=com.yourinventit \
+  -DartifactId=inventit-dmc-android-lib-api \
+  -Dversion=4.0.0 -Dclassifier=prod -Dpackaging=jar
+mvn clean deploy
+  "
 end
 
 task :get_credentials do
@@ -44,21 +69,6 @@ task :android do
   # download a secure token and sign it with a debug key
   iidn cwd, "tokengen", "simple-example", "#{cred.join(' ')}"
   latest_token = Dir.entries(cwd).sort_by{|f| File.mtime(File.join(cwd,f))}.select{|f| f.end_with?('.bin')}.reverse[0]
-  puts "
-
-
-     Unfortunately, I cannot help you actions regarding security token.
-     Run the following commands respectively later (you can copy and paste them).
-    ---
-    cd #{cwd} && keytool -importkeystore -srckeystore $HOME/.android/debug.keystore -destkeystore $HOME/.android/debug.p12 -deststoretype PKCS12
-    cd #{cwd} && openssl pkcs12 -in $HOME/.android/debug.p12 -clcerts -nokeys -out $HOME/.android/debug.pem
-    cd #{cwd} && openssl pkcs12 -in $HOME/.android/debug.p12 -nocerts -out $HOME/.android/debug.key
-    cd #{cwd} && openssl smime -sign -in #{latest_token} -out signed.bin -signer $HOME/.android/debug.pem -inkey $HOME/.android/debug.key -nodetach -outform der -binary
-    ---
-     Then build APK.
-    ---
-    cd #{cwd} && mvn clean deploy
-  "
 end
 
 task :js do

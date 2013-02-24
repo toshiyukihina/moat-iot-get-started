@@ -45,6 +45,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.9 : February 24, 2013
+
+* Fixes an issue where subtasks of setup task are performed in wrong order
+* Modifies printed comments in the Rakefile
+
 1.0.8 : February 15, 2013
 
 * Adds [Vagrant](http://www.vagrantup.com/) support. Now you are free from preparing get-started app environment
