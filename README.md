@@ -11,9 +11,7 @@ The application is composed of 4 parts:
 
 For users who aren't familiar with Rails or are using Windows OS, please choose Google App Engine application.
 
-You need to sign up Inventit IoT Developer Network Sandbox Server in order to deploy the application.
-
-(The server runtime environment will be available when [IIDN Command Line Tool](https://github.com/inventit/iidn-cli) is rolled out.)
+You need to sign up Inventit IoT Developer Network Sandbox Server with [IIDN Command Line Tool](https://github.com/inventit/iidn-cli) in order to deploy the application.
 
 ## Get Started
 
