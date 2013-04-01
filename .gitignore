@@ -4,3 +4,4 @@ signed.bin
 simple-example-android/gen
 simple-example-gae/war/WEB-INF/lib
 simple-example-gae/war/WEB-INF/classes
+simple-example-gae/war/WEB-INF/appengine-generated
