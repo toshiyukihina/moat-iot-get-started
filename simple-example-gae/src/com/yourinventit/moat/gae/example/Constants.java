@@ -94,4 +94,8 @@ public class Constants {
 	public String getURNVibrateDevice() {
 		return properties.getProperty("VIBRATE_DEVICE", "");
 	}
+
+	public String getGoogleUserId() {
+		return properties.getProperty("GOOGLE_USER_ID", "");
+	}
 }
