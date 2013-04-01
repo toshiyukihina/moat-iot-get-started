@@ -4,26 +4,29 @@
  1. [YOU] enter credentials
  2. cd android
  3. create a debug key
- 4. download a secure token
+ 4. download a secure token and API jar file
  5. [YOU] sign it with a debug key
- 6. [YOU] download API jar file and mvn clean deploy
+ 6. [YOU] mvn clean deploy
  7. cd js/simple-example
  8. jar cf ../simple-example.zip .
  9. upload the zip file
 10. cd rails
 11. filter constants.rb with credentials
 12. bundle install
+13. filter constants.properties with credentials
 
 [YOU] ... Do it yourself manually
 Other items than annotated '[YOU]' are performed by `setup` task.
 =end
+
+require 'io/console'
 
 cred = []
 latest_token = nil
 
 task :default => [:setup]
 
-task :setup => [:get_credentials, :js, :android, :rails] do
+task :setup => [:get_credentials, :js, :android, :rails, :gae] do
   puts "Done.
 
   Unfortunately, I cannot help you actions regarding security token.
@@ -38,15 +41,8 @@ openssl pkcs12 -in $HOME/.android/debug.p12 -nocerts -out $HOME/.android/debug.k
   => enter 'android' when asked to enter password (asked 3 times)
 openssl smime -sign -in #{latest_token} -out assets/moat/signed.bin -signer $HOME/.android/debug.pem -inkey $HOME/.android/debug.key -nodetach -outform der -binary
   ---
-  Then download API jar and build APK.
+  Then build APK.
   ---
-iidn sysdownload inventit-dmc-android-lib-api-4.0.0-prod.jar
-  => enter app_id, client_id and cleint_secret again
-mvn install:install-file \
-  -Dfile=inventit-dmc-android-lib-api-4.0.0-prod.jar \
-  -DgroupId=com.yourinventit \
-  -DartifactId=inventit-dmc-android-lib-api \
-  -Dversion=4.0.0 -Dclassifier=prod -Dpackaging=jar
 mvn clean deploy
   "
 end
@@ -54,7 +50,11 @@ end
 task :get_credentials do
   %w{app_id client_id client_secret}.each do |item|
     puts "Enter #{item}:"
-    input = STDIN.gets.chomp
+    if item == 'client_secret'
+      input = STDIN.noecho(&:gets).chomp
+    else
+      input = STDIN.gets.chomp
+    end
     raise "cannot be empty" if input.empty?
     cred << "--#{item}=#{input}"
   end
@@ -69,6 +69,16 @@ task :android do
   # download a secure token and sign it with a debug key
   iidn cwd, "tokengen", "simple-example", "#{cred.join(' ')}"
   latest_token = Dir.entries(cwd).sort_by{|f| File.mtime(File.join(cwd,f))}.select{|f| f.end_with?('.bin')}.reverse[0]
+  # download a jar file to build
+  iidn cwd, "sysdownload", "inventit-dmc-android-lib-api-4.0.0-prod.jar", "#{cred.join(' ')}"
+  # mvn install
+  exec_wd cwd, "
+    mvn install:install-file \
+      -Dfile=inventit-dmc-android-lib-api-4.0.0-prod.jar \
+      -DgroupId=com.yourinventit \
+      -DartifactId=inventit-dmc-android-lib-api \
+      -Dversion=4.0.0 -Dclassifier=prod -Dpackaging=jar
+  "
 end
 
 task :js do
@@ -92,6 +102,17 @@ task :rails do
   exec_wd cwd, "bundle install"
   # rake db:migrate
   exec_wd cwd, "rake db:migrate"
+end
+
+task :gae do
+  cwd = "simple-example-gae"
+  # filter constants.properties with credentials
+  filename = "#{cwd}/src/constants.properties"
+  constants = File.read(filename) 
+  constants.gsub!("{:your_application_id}", cred[0][(cred[0].index('=') + 1)..-1])
+  constants.gsub!("{:your_client_id}", cred[1][(cred[1].index('=') + 1)..-1])
+  constants.gsub!("{:your_client_secret}", cred[2][(cred[2].index('=') + 1)..-1])
+  File.open(filename, "w") { |file| file << constants }
 end
 
 def exec_wd(cwd, command)

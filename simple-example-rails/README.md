@@ -54,5 +54,5 @@ The directory structure of this application is as follows:
         `-- plugins
 
 - (1) moat\_* and sys\_* files are basic implementation of MOAT REST client
-- (2) constants.rb contains declaration for ``applicationId``, ``pacakgeId``, ``clientId``, and ``clientSecret``
+- (2) constants.rb contains declaration for `applicationId`, `pacakgeId`, `clientId`, and `clientSecret`
 - (B) where Twitter Bootstrap files exist
