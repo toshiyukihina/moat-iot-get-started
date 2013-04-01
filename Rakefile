@@ -13,6 +13,7 @@
 10. cd rails
 11. filter constants.rb with credentials
 12. bundle install
+13. filter constants.properties with credentials
 
 [YOU] ... Do it yourself manually
 Other items than annotated '[YOU]' are performed by `setup` task.
@@ -23,7 +24,7 @@ latest_token = nil
 
 task :default => [:setup]
 
-task :setup => [:get_credentials, :js, :android, :rails] do
+task :setup => [:get_credentials, :js, :android, :rails, :gae] do
   puts "Done.
 
   Unfortunately, I cannot help you actions regarding security token.
@@ -92,6 +93,17 @@ task :rails do
   exec_wd cwd, "bundle install"
   # rake db:migrate
   exec_wd cwd, "rake db:migrate"
+end
+
+task :gae do
+  cwd = "simple-example-gae"
+  # filter constants.properties with credentials
+  filename = "#{cwd}/src/constants.properties"
+  constants = File.read(filename) 
+  constants.gsub!("{:your_application_id}", cred[0][(cred[0].index('=') + 1)..-1])
+  constants.gsub!("{:your_client_id}", cred[1][(cred[1].index('=') + 1)..-1])
+  constants.gsub!("{:your_client_secret}", cred[2][(cred[2].index('=') + 1)..-1])
+  File.open(filename, "w") { |file| file << constants }
 end
 
 def exec_wd(cwd, command)
