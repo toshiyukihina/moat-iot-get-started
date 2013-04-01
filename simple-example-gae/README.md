@@ -1,4 +1,12 @@
-# MOAT IoT Simple Example Application for Google App Engine
+MOAT IoT Application Example
+========
+Simple Example Google App Engine Application
+--------
+
+This application can be deployed on Google App Engine and is already applied Twitter Bootstrap 2.2.2.
+The version of Google App Engine SDK used here is 1.7.6.
+
+See [the tutorial](http://dev.yourinventit.com/guides/get-started) to learn more.
 
 You can build and start a web application running on your localhost as Development mode or alternatively deploying on Google App Engine instance associated with your Google Account as Production mode.
 
@@ -20,3 +28,31 @@ After `git clone` or download and unarchive the zip file from the [moat-iot-get-
   1. Choose `Run As`, then click `Web Application`
   1. Open the Browser and enter `http://localhost:8888`, and you can see the top page
   1. When you get HTTP 500 error, you need to update constants.properties under the `src` directory. The credentials values are acquired when you sign up to [Inventit IoT Developer Network Sandbox Server](http://dev.yourinventit.com/guides/get-started)
+
+## Directories
+
+The directory structure of this application is as follows:
+
+    |-- src (2)
+    |   |-- com
+    |   |   `-- yourinventit
+    |   |       `-- moat
+    |   |           `-- gae
+    |   |               `-- example
+    |   |                   |-- controllers
+    |   |                   `-- models (1)
+    |   `-- META-INF
+    `-- war
+        |-- images
+        |   `-- bootstrap (B)
+        |-- javascripts
+        |   `-- bootstrap (B)
+        |-- stylesheets
+        |   `-- bootstrap (B)
+        `-- WEB-INF
+            |-- classes
+            `-- lib
+
+- (1) Moat* and Sys* files are basic implementation of MOAT REST client
+- (2) constants.properties contains declaration for `applicationId`, `pacakgeId`, `clientId`, `clientSecret` and `googleAccount`
+- (B) where Twitter Bootstrap files exist
