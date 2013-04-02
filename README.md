@@ -46,6 +46,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.11 : April 2, 2013
+
+* Fixes an issue where index.html contains wrong redirection destination
+* Fixes an issue where build.xml copies wrong version of jars from GAE Plugin directory
+
 1.0.10 : April 2, 2013
 
 * Adds a new web application project for Google App Engine
