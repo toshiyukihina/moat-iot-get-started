@@ -22,37 +22,7 @@ class DashboardController < ApplicationController
   end
   
   def vibrate
-    if params[:name]
-      now = Time.new
-      SysDmjob.new({
-        job_service_id: Moat::VIBRATE_DEVICE,
-        name: params[:name],
-        activated_at: now.rfc2822,
-        expired_at: (now + 15.minutes).rfc2822,
-        arguments: {
-          #
-          # See http://developer.android.com/reference/android/os/Vibrator.html#vibrate(long[], int)
-          # The first value indicates the number of milliseconds to wait before turning the vibrator on.
-          # The next value indicates the number of milliseconds for which to keep the vibrator on before turning it off.
-          # Subsequent values alternate between durations in milliseconds to turn the vibrator off or to turn the vibrator on.
-          #
-          # S-O-S * 2
-          options: [0, 0, 0 \
-            ,200, 200, 200, 200, 200 \
-            ,500 \
-            ,500, 200, 500, 200, 500 \
-            ,500 \
-            ,200, 200, 200, 200, 200 \
-            ,1000 \
-            ,200, 200, 200, 200, 200 \
-            ,500 \
-            ,500, 200, 500, 200, 500 \
-            ,500 \
-            ,200, 200, 200, 200, 200 \
-            ]
-        }
-      }).save
-    end
+    VibrationDevice.stub(params[:name]).vibrate_async if params[:name]
     redirect_to action: 'index'
   end
   

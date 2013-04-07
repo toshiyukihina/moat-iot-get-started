@@ -51,35 +51,7 @@ public class DashboardControllerServlet extends HttpServlet {
 			SysDevice.delete(req.getParameter("device_uid"));
 		} else if ("/vibrate".equalsIgnoreCase(pathInfo)) {
 			// vibrate
-			final SysDmjob entity = new SysDmjob();
-			entity.setJobServiceId(Constants.getInstance()
-					.getURNVibrateDevice());
-			entity.setName(req.getParameter("name"));
-			entity.setActivatedAt(new Date());
-			entity.setExpiredAt(new Date(
-					System.currentTimeMillis() + 15 * 60 * 1000));
-			//
-			// See http://developer.android.com/reference/android/os/Vibrator.html#vibrate(long[], int)
-			// The first value indicates the number of milliseconds to wait before turning the vibrator on.
-			// The next value indicates the number of milliseconds for which to keep the vibrator on before turning it off.
-			// Subsequent values alternate between durations in milliseconds to turn the vibrator off or to turn the vibrator on.
-			//
-			// S-O-S * 2
-			final JSONObject arguments = new JSONObject();
-			try {
-				arguments.put("options", new JSONArray("[0, 0, 0"
-						// vibrate then wait
-						+ ",200, 200, 200, 200, 200" + ",500"
-						+ ",500, 200, 500, 200, 500" + ",500"
-						+ ",200, 200, 200, 200, 200" + ",1000"
-						+ ",200, 200, 200, 200, 200" + ",500"
-						+ ",500, 200, 500, 200, 500" + ",500"
-						+ ",200, 200, 200, 200, 200" + "]"));
-			} catch (JSONException e) {
-				throw new IllegalStateException(e);
-			}
-			entity.setArguments(arguments);
-			SysDmjob.save(entity);
+			VibrationDevice.stub(req.getParameter("name")).vibrateAsync();
 		} else if ("/cancel".equalsIgnoreCase(pathInfo)) {
 			// cancel
 			SysDmjob.delete(req.getParameter("uid"));

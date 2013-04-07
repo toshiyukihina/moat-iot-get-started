@@ -5,9 +5,13 @@
  */
 package com.yourinventit.moat.gae.example.models;
 
+import java.util.Date;
 import java.util.List;
 
+import com.google.appengine.labs.repackaged.org.json.JSONArray;
+import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.yourinventit.moat.gae.example.Constants;
 
 /**
  * 
@@ -16,9 +20,26 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
  */
 public class VibrationDevice extends MoatModel {
 
+	private final String deviceName;
+
 	private String uid;
 
 	private JSONObject image = new JSONObject();
+
+	/**
+	 * 
+	 */
+	public VibrationDevice() {
+		this(null);
+	}
+
+	/**
+	 * 
+	 * @param deviceName
+	 */
+	public VibrationDevice(String deviceName) {
+		this.deviceName = deviceName;
+	}
 
 	/**
 	 * @return the uid
@@ -72,6 +93,42 @@ public class VibrationDevice extends MoatModel {
 
 	/**
 	 * 
+	 * @return
+	 */
+	public SysDmjob vibrateAsync() {
+		// vibrate
+		final SysDmjob entity = new SysDmjob();
+		entity.setJobServiceId(Constants.getInstance().getURNVibrateDevice());
+		entity.setName(deviceName);
+		entity.setActivatedAt(new Date());
+		entity.setExpiredAt(new Date(
+				System.currentTimeMillis() + 15 * 60 * 1000));
+		//
+		// See http://developer.android.com/reference/android/os/Vibrator.html#vibrate(long[], int)
+		// The first value indicates the number of milliseconds to wait before turning the vibrator on.
+		// The next value indicates the number of milliseconds for which to keep the vibrator on before turning it off.
+		// Subsequent values alternate between durations in milliseconds to turn the vibrator off or to turn the vibrator on.
+		//
+		// S-O-S * 2
+		final JSONObject arguments = new JSONObject();
+		try {
+			arguments.put("options", new JSONArray("[0, 0, 0"
+					// vibrate then wait
+					+ ",200, 200, 200, 200, 200" + ",500"
+					+ ",500, 200, 500, 200, 500" + ",500"
+					+ ",200, 200, 200, 200, 200" + ",1000"
+					+ ",200, 200, 200, 200, 200" + ",500"
+					+ ",500, 200, 500, 200, 500" + ",500"
+					+ ",200, 200, 200, 200, 200" + "]"));
+		} catch (JSONException e) {
+			throw new IllegalStateException(e);
+		}
+		entity.setArguments(arguments);
+		return SysDmjob.save(entity);
+	}
+
+	/**
+	 * 
 	 * @param offset
 	 * @param limit
 	 * @return
@@ -80,4 +137,12 @@ public class VibrationDevice extends MoatModel {
 		return find(VibrationDevice.class, offset, limit);
 	}
 
+	/**
+	 * 
+	 * @param deviceName
+	 * @return
+	 */
+	public static VibrationDevice stub(String deviceName) {
+		return new VibrationDevice(deviceName);
+	}
 }
