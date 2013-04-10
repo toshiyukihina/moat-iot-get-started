@@ -4,8 +4,9 @@ simple-example-android/bin
 simple-example-android/target
 simple-example-android/gen
 simple-example-android-arduino/bin
-simple-example-android-arduino/target
+simple-example-android-arduino/libs/com/hoho/usb-serial-for-android/v010/*.jar
 simple-example-android-arduino/gen
+simple-example-android-arduino/target
 simple-example-gae/war/WEB-INF/lib
 simple-example-gae/war/WEB-INF/classes
 simple-example-gae/war/WEB-INF/appengine-generated

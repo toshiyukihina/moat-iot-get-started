@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.yourinventit.moat.android.example</groupId>
+	<groupId>com.yourinventit.moat.android.example2</groupId>
 	<artifactId>simple-example-android-arduino</artifactId>
 	<version>1.0.0</version>
 	<description>MOAT Java/Android + Arduino Example :: Simple Application Example</description>
@@ -15,6 +15,14 @@
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
+	<repositories>
+		<repository>
+			<id>ProjectLocalLibrariesRepository</id>
+			<name>Project Local Libraries Repository</name>
+			<url>file://${basedir}/libs</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 	<properties>
 		<api.version>4.0.0</api.version>
 	</properties>
@@ -50,16 +58,25 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-android</artifactId>
 			<version>1.6.1-RC1</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-android</artifactId>
 			<version>4.40</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.hoho</groupId>
+			<artifactId>usb-serial-for-android</artifactId>
+			<version>v010</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
