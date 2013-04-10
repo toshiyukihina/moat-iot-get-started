@@ -3,7 +3,7 @@ MOAT IoT Application Example
 Simple Example Android Application
 --------
 
-This application requires the following private libary:
+This application requires the following private library:
 
 - inventit-dmc-android-lib-api-4.0.0-prod.jar
 
