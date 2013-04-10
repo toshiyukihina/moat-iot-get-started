@@ -148,11 +148,11 @@
 		<name>Inventit Inc.</name>
 		<url>https://github.com/inventit</url>
 	</organization>
-	<url>https://github.com/inventit/moatandroid-examples</url>
+	<url>https://github.com/inventit/moat-iot-get-started.git</url>
 	<scm>
-		<connection>scm:git:git@github.com:inventit/moatandroid-examples.git</connection>
-		<url>git@github.com:inventit/moatandroid-examples.git</url>
-		<developerConnection>scm:git:git@github.com:inventit/moatandroid-examples.git</developerConnection>
+		<connection>scm:git:git@github.com:inventit/moat-iot-get-started.git</connection>
+		<url>git@github.com:inventit/moat-iot-get-started.git</url>
+		<developerConnection>scm:git:git@github.com:inventit/moat-iot-get-started.git</developerConnection>
 	</scm>
 	<packaging>apk</packaging>
 </project>
