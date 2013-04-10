@@ -29,7 +29,7 @@
             android:name=".MoatIoTService"
             android:exported="false" />
 
-        <!-- This class is included in the Inventit Service-Sync Android Library -->
+        <!-- This class is included in the Inventit ServiceSync Android Library -->
         <service
             android:name="com.yourinventit.dmc.api.moat.android.MoatClientEndpoint"
             android:exported="true"

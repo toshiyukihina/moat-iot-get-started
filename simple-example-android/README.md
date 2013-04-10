@@ -11,7 +11,7 @@ You can download it via [iidn command line tool](https://github.com/inventit/iid
 
 The following APK must be installed into a device where this application runs.
 
-- Inventit Service-Sync Gateway
+- Inventit ServiceSync Gateway
 
 You can get it from [Goole Play](https://play.google.com/store/search?q=inventit+service-sync&c=apps) for free.
 
