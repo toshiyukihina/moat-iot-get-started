@@ -46,6 +46,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Change History
 
+1.0.12 : ????, 2013
+
+* Adds the background image gallery feature on Rails and GAE web apps. Have fun!
+
 1.0.11 : April 2, 2013
 
 * Fixes an issue where index.html contains wrong redirection destination
