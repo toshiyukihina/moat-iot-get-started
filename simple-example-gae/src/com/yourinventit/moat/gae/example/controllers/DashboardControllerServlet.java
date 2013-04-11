@@ -58,7 +58,7 @@ public class DashboardControllerServlet extends HttpServlet {
 		} else if ("/show_text_on_lcd".equalsIgnoreCase(pathInfo)) {
 			// show_text_on_lcd
 			ZigBeeDevice.stub(req.getParameter("name")).showTextOnLcdAsync(
-					req.getParameter("lcd_text"));
+					req.getParameter("uid"), req.getParameter("lcd_text"));
 		} else if ("/inquire_temp".equalsIgnoreCase(pathInfo)) {
 			// inquire_temp
 			ZigBeeDevice.stub(req.getParameter("name"))

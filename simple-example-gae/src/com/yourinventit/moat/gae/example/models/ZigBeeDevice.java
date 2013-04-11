@@ -183,9 +183,13 @@ public class ZigBeeDevice extends MoatModel {
 
 	/**
 	 * 
+	 * @param uid
+	 *            {@link ZigBeeDevice#uid}
+	 * @param text
+	 *            to be displayed
 	 * @return
 	 */
-	public SysDmjob showTextOnLcdAsync(String text) {
+	public SysDmjob showTextOnLcdAsync(String uid, String text) {
 		// showTextOnLcd
 		final SysDmjob entity = new SysDmjob();
 		entity.setJobServiceId(Constants.getInstance().getURNShowTextOnLcd());
@@ -195,6 +199,7 @@ public class ZigBeeDevice extends MoatModel {
 				System.currentTimeMillis() + 15 * 60 * 1000));
 		final JSONObject arguments = new JSONObject();
 		try {
+			arguments.put("uid", uid);
 			arguments.put("text", text);
 		} catch (JSONException e) {
 			throw new IllegalStateException(e);

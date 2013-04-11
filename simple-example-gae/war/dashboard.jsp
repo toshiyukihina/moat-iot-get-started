@@ -156,7 +156,7 @@
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
 						<th>
-							Time
+							Last Updated
 						</th>
 						<th>
 							LCD Text
@@ -177,8 +177,10 @@
 							<%= z.getLastUpdated() %>
 						</td>
 						<td>
-							<form id="<%= z.getUid() %>.show_text_on_lcd" action="/dashboard/show_text_on_lcd?name=<%= d.getName() %>">
+							<form id="<%= z.getUid() %>.show_text_on_lcd" action="/dashboard/show_text_on_lcd">
 							<input type="text" name="lcd_text" value="<%= z.getLcdText() %>" maxlength="17" />
+							<input type="hidden" name="uid" value="<%= z.getUid() %>" />
+							<input type="hidden" name="name" value="<%= d.getName() %>" />
 							</form>
 						</td>
 						<td>
@@ -188,7 +190,7 @@
 							<%= z.isClicked() %>
 						</td>
 						<td>
-							<a href="#" onclick="document.forms['<%= z.getUid() %>.show_text_on_lcd'].submit();" class="btn btn-primary">Send Text<i class='icon-play-circle icon-white'></i></a>
+							<a href="javascript:void(0);" onclick="document.forms['<%= z.getUid() %>.show_text_on_lcd'].submit();" class="btn btn-primary">Send Text<i class='icon-play-circle icon-white'></i></a>
 							<a href="/dashboard/inquire_temp?name=<%= d.getName() %>" class="btn btn-primary">Inquire Temperature <i class='icon-play-circle icon-white'></i></a>
 						</td>
 					</tr>
