@@ -7,9 +7,15 @@
 		</title>
 		<link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap/bootstrap.css">
 		<link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap/bootstrap-responsive.css">
-		<script type="text/javascript" language="javascript" src="/javascripts/bootstrap/bootstrap.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript" language="javascript" src="/javascripts/bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" language="javascript" src="/javascripts/gallery.js"></script>
 		<link rel="icon" type="image/png" href="/moat_icon.png">
+		<style type="text/css">
+body { 
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+}
+		</style>
 	</head>
 	<body>
 		<%@ page import="java.util.List" %>
@@ -20,15 +26,22 @@
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDevice" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDmjob" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.VibrationDevice" %>
+		<%@ page import="com.yourinventit.moat.gae.example.models.ZigBeeDevice" %>
 		<%
 		final List<VibrationDevice> vibrationDevices = (List<VibrationDevice>) request.getAttribute("vibration_devices");
 		final List<SysDevice> devices = (List<SysDevice>) request.getAttribute("devices");
 		final Map<String, List<ShakeEvent>> shakeEvents = (Map<String, List<ShakeEvent>>) request.getAttribute("shake_events");
+		final Map<String, List<ZigBeeDevice>> zbDevices = (Map<String, List<ZigBeeDevice>>) request.getAttribute("zb_devices");
 		final List<SysDmjob> jobList = (List<SysDmjob>) request.getAttribute("job_list");
 		final List<RequestHistory> jobHistories = (List<RequestHistory>) request.getAttribute("job_histories");
 		%>
 		<div id="wrap">
 			<div class="container">
+				<div class="btn-group" style="float:right;">
+				  <button class="btn" id="btn-off">Background OFF</button>
+				  <button class="btn" id="btn-bck"><i class="icon-backward"></i></button>
+				  <button class="btn" id="btn-fwd"><i class="icon-forward"></i></button>
+				</div>
 				<h1>
 					<img src="/moat_icon.png" alt="MOAT IoT icon" height="36" width="36" style="vertical-align: -12%;"> MOAT IoT Simple Example App
 				</h1>
@@ -144,6 +157,57 @@
 					</tr>
 					<% } %>
 				</table>
+				<%
+				final List<ZigBeeDevice> zbList = zbDevices.get(d.getName());
+				if (zbList.isEmpty() == false) {
+				%>
+				<h3>
+					ZigBee Devices for <%= d.getName() %>
+				</h3>
+				<table class="table table-striped table-bordered table-condensed">
+					<tr>
+						<th>
+							Time
+						</th>
+						<th>
+							LCD Text
+						</th>
+						<th>
+							Temperature (Celcius)
+						</th>
+						<th>
+							Button Pressed?
+						</th>
+						<th>
+							Commands
+						</th>
+					</tr>
+					<% for (ZigBeeDevice z : zbList) { %>
+					<tr>
+						<td>
+							<%= z.getLastUpdated() %>
+						</td>
+						<td>
+							<form id="<%= z.getUid() %>.show_text_on_lcd" action="/dashboard/show_text_on_lcd?name=<%= d.getName() %>">
+							<input type="text" name="lcd_text" value="<%= z.getLcdText() %>" maxlength="17" />
+							</form>
+						</td>
+						<td>
+							<%= z.getTemperature() %>
+						</td>
+						<td>
+							<%= z.isClicked() %>
+						</td>
+						<td>
+							<a href="#" onclick="document.forms['<%= z.getUid() %>.show_text_on_lcd'].submit();" class="btn btn-primary">Send Text<i class='icon-play-circle icon-white'></i></a>
+							<a href="/dashboard/inquire_temp?name=<%= d.getName() %>" class="btn btn-primary">Inquire Temperature <i class='icon-play-circle icon-white'></i></a>
+						</td>
+					</tr>
+					<%
+					    }
+					}
+					%>
+				</table>
 				<hr>
 				<% } // for (SysDevice d : devices) {} %>
 
@@ -253,6 +317,9 @@
 					</p>
 					<p class="muted credit">
 						Running with <a href="http://dev.yourinventit.com">Inventit IoT Developer Network Development Sandbox Server</a>.
+					</p>
+					<p class="muted credit">
+						Photos by <a href="http://www.flickr.com/photos/94782828@N05/">©Yuko Homma</a> licensed under <a href="http://creativecommons.org/licenses/by-nd/2.1/jp/deed.en_US">CC BY-ND 2.1 JP</a>.
 					</p>
 				</div>
 			</div>

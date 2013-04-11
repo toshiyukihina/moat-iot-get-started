@@ -95,7 +95,16 @@ public class Constants {
 		return properties.getProperty("VIBRATE_DEVICE", "");
 	}
 
+	public String getURNShowTextOnLcd() {
+		return properties.getProperty("SHOW_TEXT_ON_LCD", "");
+	}
+
+	public String getURNInquireTemperature() {
+		return properties.getProperty("INQUIRE_TEMPERATURE", "");
+	}
+
 	public String getGoogleUserId() {
 		return properties.getProperty("GOOGLE_USER_ID", "");
 	}
+
 }
