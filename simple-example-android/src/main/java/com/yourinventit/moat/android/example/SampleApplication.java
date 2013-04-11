@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2013 InventIt Inc.
  * 
- * See https://github.com/inventit/moatandroid-examples
+ * See https://github.com/inventit/moat-iot-get-started
  */
 package com.yourinventit.moat.android.example;
 
