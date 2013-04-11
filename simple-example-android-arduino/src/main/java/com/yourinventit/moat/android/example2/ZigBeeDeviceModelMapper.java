@@ -129,6 +129,7 @@ public class ZigBeeDeviceModelMapper implements ModelMapper<ZigBeeDevice> {
 	public ZigBeeDevice update(final ZigBeeDevice entity) {
 		return doInTransaction(new Callable<ZigBeeDevice>() {
 			public ZigBeeDevice call() throws Exception {
+				entity.setLastUpdated(System.currentTimeMillis());
 				getDao().update(entity);
 				return entity;
 			}
