@@ -17,6 +17,10 @@ import com.yourinventit.dmc.api.moat.Command;
 /**
  * Represents a zigbee connected constrained device such as Arduino UNO.
  * 
+ * In spite of the name of the class, ZigBee, this app is also able to work with
+ * Arduino directly with a USB cable as the USB serial driver is capable for
+ * connecting it.
+ * 
  * This model expects a device having a LCD and knocking buttons as well as a
  * ZigBee module.
  * 
