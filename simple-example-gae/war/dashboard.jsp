@@ -7,15 +7,9 @@
 		</title>
 		<link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap/bootstrap.css">
 		<link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap/bootstrap-responsive.css">
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 		<script type="text/javascript" language="javascript" src="/javascripts/bootstrap/bootstrap.min.js"></script>
-		<script type="text/javascript" language="javascript" src="/javascripts/gallery.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 		<link rel="icon" type="image/png" href="/moat_icon.png">
-		<style type="text/css">
-body { 
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
-}
-		</style>
 	</head>
 	<body>
 		<%@ page import="java.util.List" %>
@@ -37,11 +31,6 @@ body {
 		%>
 		<div id="wrap">
 			<div class="container">
-				<div class="btn-group" style="float:right;">
-				  <button class="btn" id="btn-off">Background OFF</button>
-				  <button class="btn" id="btn-bck"><i class="icon-backward"></i></button>
-				  <button class="btn" id="btn-fwd"><i class="icon-forward"></i></button>
-				</div>
 				<h1>
 					<img src="/moat_icon.png" alt="MOAT IoT icon" height="36" width="36" style="vertical-align: -12%;"> MOAT IoT Simple Example App
 				</h1>
@@ -317,9 +306,6 @@ body {
 					</p>
 					<p class="muted credit">
 						Running with <a href="http://dev.yourinventit.com">Inventit IoT Developer Network Development Sandbox Server</a>.
-					</p>
-					<p class="muted credit">
-						Photos by <a href="http://www.flickr.com/photos/94782828@N05/">©Yuko Homma</a> licensed under <a href="http://creativecommons.org/licenses/by-nd/2.1/jp/deed.en_US">CC BY-ND 2.1 JP</a>.
 					</p>
 				</div>
 			</div>
