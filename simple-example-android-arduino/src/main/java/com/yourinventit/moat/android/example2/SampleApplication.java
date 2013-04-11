@@ -229,6 +229,7 @@ public class SampleApplication extends Activity implements
 					if (zigBeeDevice.isClicked()) {
 						final long now = System.currentTimeMillis();
 						if (now - zigBeeDevice.getLastClicked() > PRESS_THRESHOLD_MS) {
+							LOGGER.info("[clickEventMonitorExecutor] Button state changed => clicked:false");
 							// The button is NOT pressed.
 							zigBeeDevice.setClicked(false);
 							getMoat().sendNotification(
@@ -331,13 +332,7 @@ public class SampleApplication extends Activity implements
 		final String dataString = new String(data);
 		LOGGER.info("[onNewData:IN] Read bytes: {}, Text: {}", data.length,
 				dataString);
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				textView.append(dataString);
-				scrollView.smoothScrollTo(0, textView.getBottom());
-			}
-		});
+		String additionalInfo = "Nothing Done.\n";
 		for (int i = 0; i < data.length; i++) {
 			if (isDelimiter(data[i])) {
 				if (isInEmpty() || isNotInitialized()) {
@@ -356,9 +351,10 @@ public class SampleApplication extends Activity implements
 				final String message = new String(payload);
 				LOGGER.info("[onNewData] message => {}", message);
 				if (message.startsWith("TEMP:")) {
-					performTemperatureResponse(zigBeeDevice, message);
+					additionalInfo += performTemperatureResponse(zigBeeDevice,
+							message);
 				} else if ("CLICKED:TRUE".equals(message)) {
-					performClicked(zigBeeDevice);
+					additionalInfo += performClicked(zigBeeDevice);
 				} else {
 					LOGGER.warn("[onNewData] Unknown message. Ignored.");
 				}
@@ -366,6 +362,14 @@ public class SampleApplication extends Activity implements
 				getIn().write(data[i]);
 			}
 		}
+		final String line = additionalInfo;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				textView.append(line);
+				scrollView.smoothScrollTo(0, textView.getBottom());
+			}
+		});
 	}
 
 	/**
@@ -373,29 +377,34 @@ public class SampleApplication extends Activity implements
 	 * @param zigBeeDevice
 	 * @param message
 	 */
-	private void performTemperatureResponse(ZigBeeDevice zigBeeDevice,
+	private String performTemperatureResponse(ZigBeeDevice zigBeeDevice,
 			String message) {
-		zigBeeDevice.setTemperature(Float.valueOf(message.substring(5)));
+		final float t = Float.valueOf(message.substring(5));
+		zigBeeDevice.setTemperature(t);
 		getZigBeeDeviceModelMapper().update(zigBeeDevice);
 		getMoat().sendNotification(
 				MoatIoTService.getMoatUrn(getUrnPrefix(), "ShakeEvent", "1.0"),
 				null, new Object[] { zigBeeDevice });
+		return "Temp(C):" + t + " => Notified to Server!\n";
 	}
 
 	/**
 	 * 
 	 * @param zigBeeDevice
 	 */
-	private void performClicked(ZigBeeDevice zigBeeDevice) {
+	private String performClicked(ZigBeeDevice zigBeeDevice) {
 		final boolean isClicked = zigBeeDevice.isClicked();
 		zigBeeDevice.setClicked(true);
 		zigBeeDevice.setLastClicked(System.currentTimeMillis());
 		getZigBeeDeviceModelMapper().update(zigBeeDevice);
-		if (!isClicked) {
+		if (isClicked) {
+			return "Clicked => Last Clicked Time Has Been Updated.\n";
+		} else {
+			LOGGER.info("[performClicked] Button state changed => clicked:true");
 			getMoat().sendNotification(
-					MoatIoTService.getMoatUrn(getUrnPrefix(),
-							"notify-button-state", "1.0"), null,
-					new Object[] { zigBeeDevice });
+					MoatIoTService.getMoatUrn(getUrnPrefix(), "ShakeEvent",
+							"1.0"), null, new Object[] { zigBeeDevice });
+			return "Clicked => Notified to Server!\n";
 		}
 	}
 
