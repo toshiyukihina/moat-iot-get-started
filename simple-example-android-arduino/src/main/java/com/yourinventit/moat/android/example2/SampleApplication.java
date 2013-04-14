@@ -6,7 +6,6 @@
 package com.yourinventit.moat.android.example2;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,14 +17,13 @@ import org.slf4j.LoggerFactory;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.HexDump;
 import com.yourinventit.dmc.api.moat.ContextFactory;
 import com.yourinventit.dmc.api.moat.Moat;
@@ -45,14 +43,9 @@ public class SampleApplication extends Activity implements
 			.getLogger(SampleApplication.class);
 
 	/**
-	 * Baud rate for ZigBee UART
-	 */
-	public static final int BAUD_RATE = 19200;
-
-	/**
 	 * Threshold to detect if the button is kept pressed.
 	 */
-	static final long PRESS_THRESHOLD_MS = 300;
+	static final long PRESS_THRESHOLD_MS = 1500;
 
 	/**
 	 * The uid value for the connected zigbee device object.
@@ -80,30 +73,14 @@ public class SampleApplication extends Activity implements
 	private static String urnPrefix;
 
 	/**
-	 * {@link UsbManager}
+	 * {@link UsbSerialDevice}
 	 */
-	private UsbManager usbManager;
-
-	/**
-	 * {@link UsbSerialDriver}
-	 */
-	private UsbSerialDriver usbSerialDriver;
-
-	/**
-	 * {@link SerialInputOutputManager}
-	 */
-	private SerialInputOutputManager serialInputOutputManager;
+	private UsbSerialDevice usbSerialDevice;
 
 	/**
 	 * The incoming data buffer
 	 */
 	private ByteArrayOutputStream in;
-
-	/**
-	 * {@link ExecutorService}
-	 */
-	private final ExecutorService serialInputOutputExecutor = Executors
-			.newSingleThreadExecutor();
 
 	/**
 	 * {@link ExecutorService}
@@ -189,6 +166,13 @@ public class SampleApplication extends Activity implements
 	}
 
 	/**
+	 * @return the usbSerialDevice
+	 */
+	UsbSerialDevice getUsbSerialDevice() {
+		return usbSerialDevice;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
@@ -207,8 +191,9 @@ public class SampleApplication extends Activity implements
 		// Starting the MoatIoTService on this application starting up.
 		startService(new Intent(this, MoatIoTService.class));
 
-		// System USB service
-		this.usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+		// USB Serial Device
+		usbSerialDevice = new UsbSerialDevice(
+				(UsbManager) getSystemService(Context.USB_SERVICE), this);
 
 		// Timer task
 		clickEventMonitorExecutor.scheduleAtFixedRate(new Runnable() {
@@ -220,6 +205,9 @@ public class SampleApplication extends Activity implements
 			 */
 			@Override
 			public void run() {
+				if (isNotInitialized()) {
+					return;
+				}
 				try {
 					final ZigBeeDevice zigBeeDevice = getZigBeeDeviceModelMapper()
 							.findByUid(ZIGBEE_DEVICE_UID);
@@ -232,6 +220,7 @@ public class SampleApplication extends Activity implements
 							LOGGER.info("[clickEventMonitorExecutor] Button state changed => clicked:false");
 							// The button is NOT pressed.
 							zigBeeDevice.setClicked(false);
+							getZigBeeDeviceModelMapper().update(zigBeeDevice);
 							getMoat().sendNotification(
 									MoatIoTService.getMoatUrn(getUrnPrefix(),
 											"ShakeEvent", "1.0"), null,
@@ -243,19 +232,7 @@ public class SampleApplication extends Activity implements
 					// may throw IllegalStateException
 				}
 			}
-		}, 0, 400, TimeUnit.MICROSECONDS);
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * 
-	 * @see android.app.Activity#onPause()
-	 */
-	protected void onPause() {
-		super.onPause();
-		stopSerialInputOutputManager();
-		closeUsbSerialDriver();
+		}, 0, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -266,13 +243,29 @@ public class SampleApplication extends Activity implements
 	 */
 	protected void onResume() {
 		super.onResume();
-		if (inquireUsbSerialDriver()) {
-			textView.setText("USB Serial Device is detected => { VID:"
-					+ usbSerialDriver.getDevice().getVendorId() + ", PID:"
-					+ usbSerialDriver.getDevice().getProductId() + "}\n");
+		if (usbSerialDevice.inquireUsbSerialDriver()) {
+			final UsbDevice usbDevice = usbSerialDevice.getUsbSerialDriver()
+					.getDevice();
+			if (textView.getText() == null || textView.getText().length() == 0) {
+				textView.setText("USB Serial Device is detected => { VID:"
+						+ usbDevice.getVendorId() + ", PID:"
+						+ usbDevice.getProductId() + "}\n");
+			}
 		} else {
 			textView.setText("USB Serial Device is missing.");
 		}
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Activity#onDestroy()
+	 */
+	protected void onDestroy() {
+		super.onDestroy();
+		usbSerialDevice.closeUsbSerialDriver();
+		stopService(new Intent(this, MoatIoTService.class));
 	}
 
 	/**
@@ -342,10 +335,10 @@ public class SampleApplication extends Activity implements
 				resetIn();
 				final ZigBeeDevice zigBeeDevice = getZigBeeDeviceModelMapper()
 						.findByUid(ZIGBEE_DEVICE_UID);
+				LOGGER.info(
+						"[onNewData] ZigBee Device data is missing. Message => {}",
+						HexDump.dumpHexString(payload));
 				if (zigBeeDevice == null) {
-					LOGGER.warn(
-							"[onNewData] ZigBee Device data is missing. Message => {}",
-							HexDump.dumpHexString(payload));
 					continue;
 				}
 				final String message = new String(payload);
@@ -363,6 +356,14 @@ public class SampleApplication extends Activity implements
 			}
 		}
 		final String line = additionalInfo;
+		appendText("[ZB] => " + line);
+	}
+
+	/**
+	 * 
+	 * @param line
+	 */
+	public void appendText(final String line) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -415,74 +416,13 @@ public class SampleApplication extends Activity implements
 	 */
 	@Override
 	public void onRunError(Exception e) {
-		LOGGER.error("Exception detected.", e);
-	}
-
-	/**
-	 * @return the serialInputOutputManager
-	 */
-	protected SerialInputOutputManager getSerialInputOutputManager() {
-		return serialInputOutputManager;
-	}
-
-	/**
-	 * Inquires a USB serial driver and returns if any driver is detected.
-	 * 
-	 * @return true if a USB serial driver is found and is ready.
-	 */
-	protected boolean inquireUsbSerialDriver() {
-		UsbSerialDriver usbSerialDriver = UsbSerialProber.acquire(usbManager);
+		LOGGER.warn("Exception detected. Restart SerialInputOutputManager.", e);
+		usbSerialDevice.closeUsbSerialDriver();
 		try {
-			stopSerialInputOutputManager();
-			if (usbSerialDriver != null) {
-				usbSerialDriver.open();
-				usbSerialDriver.setBaudRate(BAUD_RATE);
-			}
-
-		} catch (IOException exception) {
-			usbSerialDriver = null;
-
-		} finally {
-			this.usbSerialDriver = usbSerialDriver;
-			startSerialInputOutputManager();
+			Thread.sleep(5000);
+		} catch (InterruptedException ignored) {
 		}
-		return usbSerialDriver != null;
-	}
-
-	/**
-	 * setup {@link SerialInputOutputManager}
-	 */
-	protected void startSerialInputOutputManager() {
-		if (usbSerialDriver != null) {
-			serialInputOutputManager = new SerialInputOutputManager(
-					usbSerialDriver);
-			serialInputOutputManager.setListener(this);
-			serialInputOutputExecutor.submit(serialInputOutputManager);
-		}
-	}
-
-	/**
-	 * {@link SerialInputOutputManager#stop()}
-	 */
-	protected void stopSerialInputOutputManager() {
-		if (serialInputOutputManager != null) {
-			serialInputOutputManager.stop();
-			serialInputOutputManager = null;
-		}
-	}
-
-	/**
-	 * Closes the current {@link UsbSerialDriver}.
-	 */
-	protected void closeUsbSerialDriver() {
-		if (usbSerialDriver != null) {
-			try {
-				usbSerialDriver.close();
-			} catch (IOException ignored) {
-			} finally {
-				usbSerialDriver = null;
-			}
-		}
+		usbSerialDevice.inquireUsbSerialDriver();
 	}
 
 	/**
