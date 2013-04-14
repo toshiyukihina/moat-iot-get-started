@@ -44,8 +44,10 @@ public class AndroidContextFactory implements ContextFactory {
 		final Map<String, Object> executionContext = new HashMap<String, Object>();
 		executionContext.put(Context.class.getName(),
 				sampleApplication.getApplicationContext());
-		executionContext.put(SerialInputOutputManager.class.getName(),
-				sampleApplication.getSerialInputOutputManager());
+		executionContext.put(UsbSerialDevice.class.getName(),
+				sampleApplication.getUsbSerialDevice());
+		executionContext.put(SampleApplication.class.getName(),
+				sampleApplication);
 		return executionContext;
 	}
 

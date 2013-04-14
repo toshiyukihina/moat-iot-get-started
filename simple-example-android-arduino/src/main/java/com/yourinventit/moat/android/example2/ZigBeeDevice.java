@@ -180,10 +180,14 @@ public class ZigBeeDevice {
 		final String paramText = (String) context.get("data");
 		setLcdText(paramText);
 		LOGGER.debug("[{}:showTextOnLcd] => [{}]", uid, paramText);
-		final SerialInputOutputManager serialInputOutputManager = (SerialInputOutputManager) context
-				.get(SerialInputOutputManager.class.getName());
+		final UsbSerialDevice usbSerialDevice = (UsbSerialDevice) context
+				.get(UsbSerialDevice.class.getName());
 		final String payload = "LCD:" + getLcdText() + "\n";
+		final SerialInputOutputManager serialInputOutputManager = usbSerialDevice
+				.getSerialInputOutputManager();
 		serialInputOutputManager.writeAsync(payload.getBytes());
+		((SampleApplication) context.get(SampleApplication.class.getName()))
+				.appendText("[SRV]=>" + payload);
 	}
 
 	/**
@@ -196,9 +200,13 @@ public class ZigBeeDevice {
 	@Command
 	public void inquireTemperature(Map<String, Object> context) {
 		LOGGER.debug("[{}:inquireTemperature] => [{}]", uid);
-		final SerialInputOutputManager serialInputOutputManager = (SerialInputOutputManager) context
-				.get(SerialInputOutputManager.class.getName());
+		final UsbSerialDevice usbSerialDevice = (UsbSerialDevice) context
+				.get(UsbSerialDevice.class.getName());
 		final String payload = "TEMP?\n";
+		final SerialInputOutputManager serialInputOutputManager = usbSerialDevice
+				.getSerialInputOutputManager();
 		serialInputOutputManager.writeAsync(payload.getBytes());
+		((SampleApplication) context.get(SampleApplication.class.getName()))
+				.appendText("[SRV]=>" + payload);
 	}
 }
