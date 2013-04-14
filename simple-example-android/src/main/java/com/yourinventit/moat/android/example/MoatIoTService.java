@@ -165,6 +165,14 @@ public class MoatIoTService extends Service {
 								urnPrefix, shakeEventModelMapper, context));
 						LOGGER.info("onCreate(): MotionSensorListener has been initialized.");
 						LOGGER.info("onCreate(): OK. I'm ready.");
+						Looper.prepare();
+						new Handler(getMainLooper()).post(new Runnable() {
+							public void run() {
+								Toast.makeText(getApplicationContext(),
+										"OK. Successfully connected to GW.",
+										Toast.LENGTH_LONG).show();
+							}
+						});
 					}
 
 					/**
