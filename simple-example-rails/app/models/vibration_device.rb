@@ -1,19 +1,19 @@
 # /moat/v1/simple-example/vibrationdevice
 class VibrationDevice < MoatModel
 
-  def initialize(device_name=nil)
-    @device_name = device_name
-  end
+  attr_accessor :device_name
 
   def self.stub(device_name)
-    VibrationDevice.new(device_name)
+    v = VibrationDevice.new
+    v.device_name = device_name
+    v
   end
 
   def vibrate_async
     now = Time.new
     SysDmjob.new({
       job_service_id: Moat::VIBRATE_DEVICE,
-      name: @device_name,
+      name: device_name,
       activated_at: now.rfc2822,
       expired_at: (now + 15.minutes).rfc2822,
       arguments: {
