@@ -8,6 +8,8 @@ SimpleExampleRails::Application.routes.draw do
   match 'dashboard/cancel' => 'dashboard#cancel'
   match 'dashboard/delete_all_shake_events' => 'dashboard#delete_all_shake_events'
   match 'dashboard/delete_device' => 'dashboard#delete_device'
+  match 'dashboard/show_text_on_lcd' => 'dashboard#show_text_on_lcd'
+  match 'dashboard/inquire_temp' => 'dashboard#inquire_temp'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
