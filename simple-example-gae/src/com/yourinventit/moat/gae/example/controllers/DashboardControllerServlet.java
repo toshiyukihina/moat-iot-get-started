@@ -57,11 +57,13 @@ public class DashboardControllerServlet extends HttpServlet {
 					req.getParameter("device_uid"));
 		} else if ("/show_text_on_lcd".equalsIgnoreCase(pathInfo)) {
 			// show_text_on_lcd
-			ZigBeeDevice.stub(req.getParameter("name")).showTextOnLcdAsync(
-					req.getParameter("uid"), req.getParameter("lcd_text"));
+			ZigBeeDevice
+					.stub(req.getParameter("name"), req.getParameter("uid"))
+					.showTextOnLcdAsync(req.getParameter("lcd_text"));
 		} else if ("/inquire_temp".equalsIgnoreCase(pathInfo)) {
 			// inquire_temp
-			ZigBeeDevice.stub(req.getParameter("name"))
+			ZigBeeDevice
+					.stub(req.getParameter("name"), req.getParameter("uid"))
 					.inquireTemperatureAsync();
 		}
 		// index

@@ -129,7 +129,7 @@
 					<% for (ShakeEvent se : list) { %>
 					<tr>
 						<td>
-							<%= se.getTime() %>
+							<%= new java.util.Date(se.getTime()) %>
 						</td>
 						<td>
 							<%= se.getX() %>
@@ -174,7 +174,7 @@
 					<% for (ZigBeeDevice z : zbList) { %>
 					<tr>
 						<td>
-							<%= z.getLastUpdated() %>
+							<%= new java.util.Date(z.getLastUpdated()) %>
 						</td>
 						<td>
 							<form id="<%= z.getUid() %>.show_text_on_lcd" action="/dashboard/show_text_on_lcd">
@@ -191,7 +191,7 @@
 						</td>
 						<td>
 							<a href="javascript:void(0);" onclick="document.forms['<%= z.getUid() %>.show_text_on_lcd'].submit();" class="btn btn-primary">Send Text<i class='icon-play-circle icon-white'></i></a>
-							<a href="/dashboard/inquire_temp?name=<%= d.getName() %>" class="btn btn-primary">Inquire Temperature <i class='icon-play-circle icon-white'></i></a>
+							<a href="/dashboard/inquire_temp?name=<%= d.getName() %>&uid=<%= z.getUid() %>" class="btn btn-primary">Inquire Temperature <i class='icon-play-circle icon-white'></i></a>
 						</td>
 					</tr>
 					<%
