@@ -348,6 +348,8 @@ public class SampleApplication extends Activity implements
 							message);
 				} else if ("CLICKED:TRUE".equals(message)) {
 					additionalInfo += performClicked(zigBeeDevice);
+				} else if (message.endsWith(":OK\n")) {
+					LOGGER.warn("[onNewData] Response => {}", message);
 				} else {
 					LOGGER.warn("[onNewData] Unknown message. Ignored.");
 				}
