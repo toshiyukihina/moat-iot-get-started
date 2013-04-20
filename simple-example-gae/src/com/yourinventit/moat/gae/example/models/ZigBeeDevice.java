@@ -55,15 +55,17 @@ public class ZigBeeDevice extends MoatModel {
 	 * 
 	 */
 	public ZigBeeDevice() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
 	 * 
 	 * @param deviceName
+	 * @param uid
 	 */
-	public ZigBeeDevice(String deviceName) {
+	public ZigBeeDevice(String deviceName, String uid) {
 		this.deviceName = deviceName;
+		setUid(uid);
 	}
 
 	/**
@@ -183,13 +185,11 @@ public class ZigBeeDevice extends MoatModel {
 
 	/**
 	 * 
-	 * @param uid
-	 *            {@link ZigBeeDevice#uid}
 	 * @param text
 	 *            to be displayed
 	 * @return
 	 */
-	public SysDmjob showTextOnLcdAsync(String uid, String text) {
+	public SysDmjob showTextOnLcdAsync(String text) {
 		// showTextOnLcd
 		final SysDmjob entity = new SysDmjob();
 		entity.setJobServiceId(Constants.getInstance().getURNShowTextOnLcd());
@@ -221,6 +221,13 @@ public class ZigBeeDevice extends MoatModel {
 		entity.setActivatedAt(new Date());
 		entity.setExpiredAt(new Date(
 				System.currentTimeMillis() + 15 * 60 * 1000));
+		final JSONObject arguments = new JSONObject();
+		try {
+			arguments.put("uid", uid);
+		} catch (JSONException e) {
+			throw new IllegalStateException(e);
+		}
+		entity.setArguments(arguments);
 		return SysDmjob.save(entity);
 	}
 
@@ -239,10 +246,11 @@ public class ZigBeeDevice extends MoatModel {
 	/**
 	 * 
 	 * @param deviceName
+	 * @param uid
 	 * @return
 	 */
-	public static ZigBeeDevice stub(String deviceName) {
-		return new ZigBeeDevice(deviceName);
+	public static ZigBeeDevice stub(String deviceName, String uid) {
+		return new ZigBeeDevice(deviceName, uid);
 	}
 
 }

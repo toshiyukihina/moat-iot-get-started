@@ -11,9 +11,13 @@ var session = context.session;
 
 session.log('inquireTemperature', 'Start InquireTemperature!');
 
+// Get dmJob arguments.
+var args = context.clientRequest.dmjob.arguments;
+session.log('inquireTemperature', 'args => ' + args);
+
 // Run ZigBeeDevice#inquireTemperature() method on the remote device!
 var mapper = session.newModelMapperStub('ZigBeeDevice');
-var device = mapper.newModelStub();
+var device = mapper.newModelStub(args.uid);
 device.inquireTemperature(session, null, {
 	success: function(obj) {
 		session.log('inquireTemperature', 'Successful!!');

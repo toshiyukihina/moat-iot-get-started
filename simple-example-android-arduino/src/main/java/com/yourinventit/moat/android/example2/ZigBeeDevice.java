@@ -186,6 +186,9 @@ public class ZigBeeDevice {
 		final SerialInputOutputManager serialInputOutputManager = usbSerialDevice
 				.getSerialInputOutputManager();
 		serialInputOutputManager.writeAsync(payload.getBytes());
+		final ZigBeeDeviceModelMapper mapper = (ZigBeeDeviceModelMapper) context
+				.get(ZigBeeDeviceModelMapper.class.getName());
+		mapper.update(this);
 		((SampleApplication) context.get(SampleApplication.class.getName()))
 				.appendText("[SRV]=>" + payload);
 	}
