@@ -48,6 +48,8 @@ public class AndroidContextFactory implements ContextFactory {
 				sampleApplication.getUsbSerialDevice());
 		executionContext.put(SampleApplication.class.getName(),
 				sampleApplication);
+		executionContext.put(ZigBeeDeviceModelMapper.class.getName(),
+				SampleApplication.getZigBeeDeviceModelMapper());
 		return executionContext;
 	}
 
