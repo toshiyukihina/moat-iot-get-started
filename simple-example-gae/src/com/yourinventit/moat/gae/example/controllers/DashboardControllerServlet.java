@@ -6,7 +6,6 @@
 package com.yourinventit.moat.gae.example.controllers;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.labs.repackaged.org.json.JSONArray;
-import com.google.appengine.labs.repackaged.org.json.JSONException;
-import com.google.appengine.labs.repackaged.org.json.JSONObject;
-import com.yourinventit.moat.gae.example.Constants;
 import com.yourinventit.moat.gae.example.models.RequestHistory;
 import com.yourinventit.moat.gae.example.models.ShakeEvent;
 import com.yourinventit.moat.gae.example.models.SysDevice;
 import com.yourinventit.moat.gae.example.models.SysDmjob;
 import com.yourinventit.moat.gae.example.models.VibrationDevice;
+import com.yourinventit.moat.gae.example.models.ZigBeeDevice;
 
 /**
  * 
@@ -51,35 +47,7 @@ public class DashboardControllerServlet extends HttpServlet {
 			SysDevice.delete(req.getParameter("device_uid"));
 		} else if ("/vibrate".equalsIgnoreCase(pathInfo)) {
 			// vibrate
-			final SysDmjob entity = new SysDmjob();
-			entity.setJobServiceId(Constants.getInstance()
-					.getURNVibrateDevice());
-			entity.setName(req.getParameter("name"));
-			entity.setActivatedAt(new Date());
-			entity.setExpiredAt(new Date(
-					System.currentTimeMillis() + 15 * 60 * 1000));
-			//
-			// See http://developer.android.com/reference/android/os/Vibrator.html#vibrate(long[], int)
-			// The first value indicates the number of milliseconds to wait before turning the vibrator on.
-			// The next value indicates the number of milliseconds for which to keep the vibrator on before turning it off.
-			// Subsequent values alternate between durations in milliseconds to turn the vibrator off or to turn the vibrator on.
-			//
-			// S-O-S * 2
-			final JSONObject arguments = new JSONObject();
-			try {
-				arguments.put("options", new JSONArray("[0, 0, 0"
-						// vibrate then wait
-						+ ",200, 200, 200, 200, 200" + ",500"
-						+ ",500, 200, 500, 200, 500" + ",500"
-						+ ",200, 200, 200, 200, 200" + ",1000"
-						+ ",200, 200, 200, 200, 200" + ",500"
-						+ ",500, 200, 500, 200, 500" + ",500"
-						+ ",200, 200, 200, 200, 200" + "]"));
-			} catch (JSONException e) {
-				throw new IllegalStateException(e);
-			}
-			entity.setArguments(arguments);
-			SysDmjob.save(entity);
+			VibrationDevice.stub(req.getParameter("name")).vibrateAsync();
 		} else if ("/cancel".equalsIgnoreCase(pathInfo)) {
 			// cancel
 			SysDmjob.delete(req.getParameter("uid"));
@@ -87,17 +55,30 @@ public class DashboardControllerServlet extends HttpServlet {
 			// delete_all_shake_events
 			ShakeEvent.delete(req.getParameter("uids"),
 					req.getParameter("device_uid"));
+		} else if ("/show_text_on_lcd".equalsIgnoreCase(pathInfo)) {
+			// show_text_on_lcd
+			ZigBeeDevice
+					.stub(req.getParameter("name"), req.getParameter("uid"))
+					.showTextOnLcdAsync(req.getParameter("lcd_text"));
+		} else if ("/inquire_temp".equalsIgnoreCase(pathInfo)) {
+			// inquire_temp
+			ZigBeeDevice
+					.stub(req.getParameter("name"), req.getParameter("uid"))
+					.inquireTemperatureAsync();
 		}
 		// index
-		req.setAttribute("vibration_devices", VibrationDevice.find(0, -1));
 		final List<SysDevice> devices = SysDevice.find(0, -1);
 		req.setAttribute("devices", devices);
+		final Map<String, List<ZigBeeDevice>> zbDevices = new HashMap<String, List<ZigBeeDevice>>();
 		final Map<String, List<ShakeEvent>> shakeEvents = new HashMap<String, List<ShakeEvent>>();
 		for (SysDevice device : devices) {
 			shakeEvents.put(device.getName(),
 					ShakeEvent.find(device.getUid(), 0, -1));
+			zbDevices.put(device.getName(),
+					ZigBeeDevice.find(device.getUid(), 0, -1));
 		}
 		req.setAttribute("shake_events", shakeEvents);
+		req.setAttribute("zb_devices", zbDevices);
 		req.setAttribute("job_list", SysDmjob.find(0, -1));
 		req.setAttribute("job_histories", RequestHistory.find());
 

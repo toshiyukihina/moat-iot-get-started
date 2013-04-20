@@ -25,11 +25,11 @@ body {
 		<%@ page import="com.yourinventit.moat.gae.example.models.ShakeEvent" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDevice" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDmjob" %>
-		<%@ page import="com.yourinventit.moat.gae.example.models.VibrationDevice" %>
+		<%@ page import="com.yourinventit.moat.gae.example.models.ZigBeeDevice" %>
 		<%
-		final List<VibrationDevice> vibrationDevices = (List<VibrationDevice>) request.getAttribute("vibration_devices");
 		final List<SysDevice> devices = (List<SysDevice>) request.getAttribute("devices");
 		final Map<String, List<ShakeEvent>> shakeEvents = (Map<String, List<ShakeEvent>>) request.getAttribute("shake_events");
+		final Map<String, List<ZigBeeDevice>> zbDevices = (Map<String, List<ZigBeeDevice>>) request.getAttribute("zb_devices");
 		final List<SysDmjob> jobList = (List<SysDmjob>) request.getAttribute("job_list");
 		final List<RequestHistory> jobHistories = (List<RequestHistory>) request.getAttribute("job_histories");
 		%>
@@ -43,28 +43,6 @@ body {
 				<h1>
 					<img src="/moat_icon.png" alt="MOAT IoT icon" height="36" width="36" style="vertical-align: -12%;"> MOAT IoT Simple Example App
 				</h1>
-				<h2>
-					Resource Example
-				</h2>
-				<table class="table table-striped table-bordered table-condensed">
-					<tr>
-						<th>
-							Image
-						</th>
-					</tr>
-					<% if (vibrationDevices != null) {
-						for (VibrationDevice vd : vibrationDevices) {
-					%>
-					<tr>
-						<td>
-							<%= vd.getImage().getString("type") %>: <img src="<%= vd.getImage().getString("get") %>">
-						</td>
-					</tr>
-					<%
-							}
-						}
-					%>
-				</table>
 				<h2>
 					Devices
 				</h2><% if (devices == null || devices.isEmpty()) {%>
@@ -138,7 +116,7 @@ body {
 					<% for (ShakeEvent se : list) { %>
 					<tr>
 						<td>
-							<%= se.getTime() %>
+							<%= new java.util.Date(se.getTime()) %>
 						</td>
 						<td>
 							<%= se.getX() %>
@@ -154,6 +132,59 @@ body {
 						</td>
 					</tr>
 					<% } %>
+				</table>
+				<%
+				final List<ZigBeeDevice> zbList = zbDevices.get(d.getName());
+				if (zbList.isEmpty() == false) {
+				%>
+				<h3>
+					ZigBee Devices for <%= d.getName() %>
+				</h3>
+				<table class="table table-striped table-bordered table-condensed">
+					<tr>
+						<th>
+							Last Updated
+						</th>
+						<th>
+							LCD Text
+						</th>
+						<th>
+							Temperature (Celcius)
+						</th>
+						<th>
+							Button Pressed?
+						</th>
+						<th>
+							Commands
+						</th>
+					</tr>
+					<% for (ZigBeeDevice z : zbList) { %>
+					<tr>
+						<td>
+							<%= new java.util.Date(z.getLastUpdated()) %>
+						</td>
+						<td>
+							<form id="<%= z.getUid() %>.show_text_on_lcd" action="/dashboard/show_text_on_lcd">
+							<input type="text" name="lcd_text" value="<%= z.getLcdText() %>" maxlength="17" />
+							<input type="hidden" name="uid" value="<%= z.getUid() %>" />
+							<input type="hidden" name="name" value="<%= d.getName() %>" />
+							</form>
+						</td>
+						<td>
+							<%= z.getTemperature() %>
+						</td>
+						<td>
+							<%= z.isClicked() %>
+						</td>
+						<td>
+							<a href="javascript:void(0);" onclick="document.forms['<%= z.getUid() %>.show_text_on_lcd'].submit();" class="btn btn-primary">Send Text<i class='icon-play-circle icon-white'></i></a>
+							<a href="/dashboard/inquire_temp?name=<%= d.getName() %>&uid=<%= z.getUid() %>" class="btn btn-primary">Inquire Temperature <i class='icon-play-circle icon-white'></i></a>
+						</td>
+					</tr>
+					<%
+					    }
+					}
+					%>
 				</table>
 				<hr>
 				<% } // for (SysDevice d : devices) {} %>
