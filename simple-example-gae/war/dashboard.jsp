@@ -19,10 +19,8 @@
 		<%@ page import="com.yourinventit.moat.gae.example.models.ShakeEvent" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDevice" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.SysDmjob" %>
-		<%@ page import="com.yourinventit.moat.gae.example.models.VibrationDevice" %>
 		<%@ page import="com.yourinventit.moat.gae.example.models.ZigBeeDevice" %>
 		<%
-		final List<VibrationDevice> vibrationDevices = (List<VibrationDevice>) request.getAttribute("vibration_devices");
 		final List<SysDevice> devices = (List<SysDevice>) request.getAttribute("devices");
 		final Map<String, List<ShakeEvent>> shakeEvents = (Map<String, List<ShakeEvent>>) request.getAttribute("shake_events");
 		final Map<String, List<ZigBeeDevice>> zbDevices = (Map<String, List<ZigBeeDevice>>) request.getAttribute("zb_devices");
@@ -34,28 +32,6 @@
 				<h1>
 					<img src="/moat_icon.png" alt="MOAT IoT icon" height="36" width="36" style="vertical-align: -12%;"> MOAT IoT Simple Example App
 				</h1>
-				<h2>
-					Resource Example
-				</h2>
-				<table class="table table-striped table-bordered table-condensed">
-					<tr>
-						<th>
-							Image
-						</th>
-					</tr>
-					<% if (vibrationDevices != null) {
-						for (VibrationDevice vd : vibrationDevices) {
-					%>
-					<tr>
-						<td>
-							<%= vd.getImage().getString("type") %>: <img src="<%= vd.getImage().getString("get") %>">
-						</td>
-					</tr>
-					<%
-							}
-						}
-					%>
-				</table>
 				<h2>
 					Devices
 				</h2><% if (devices == null || devices.isEmpty()) {%>

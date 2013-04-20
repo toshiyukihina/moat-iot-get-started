@@ -67,7 +67,6 @@ public class DashboardControllerServlet extends HttpServlet {
 					.inquireTemperatureAsync();
 		}
 		// index
-		req.setAttribute("vibration_devices", VibrationDevice.find(0, -1));
 		final List<SysDevice> devices = SysDevice.find(0, -1);
 		req.setAttribute("devices", devices);
 		final Map<String, List<ZigBeeDevice>> zbDevices = new HashMap<String, List<ZigBeeDevice>>();
