@@ -288,16 +288,16 @@ body {
 			<div id="footer">
 				<div class="container">
 					<p class="muted credit">
-						Copyright © 2013 <a href="http://www.yourinventit.com">Inventit Inc.</a>
+						Copyright &copy; 2013 <a href="http://www.yourinventit.com">Inventit Inc.</a>
 					</p>
 					<p class="muted credit">
-						Built with <a href="http://dev.yourinventit.com/references/moat-rest-api-document">MOAT REST 1.0.1</a>, <a href="http://twitter.github.com/bootstrap/index.html">Bootstrap 2.2.2</a> and <a href="https://developers.google.com/appengine/">Google App Engine 1.7.3</a>.
+						Built with <a href="http://dev.yourinventit.com/references/moat-rest-api-document">MOAT REST 1.0.1</a>, <a href="http://twitter.github.com/bootstrap/index.html">Bootstrap 2.2.2</a> and <a href="https://developers.google.com/appengine/">Google App Engine 1.7.6/1.7.7.1</a>.
 					</p>
 					<p class="muted credit">
 						Running with <a href="http://dev.yourinventit.com">Inventit IoT Developer Network Development Sandbox Server</a>.
 					</p>
 					<p class="muted credit">
-						Photos by <a href="http://www.flickr.com/photos/94782828@N05/">©Yuko Homma</a> licensed under <a href="http://creativecommons.org/licenses/by-nd/2.1/jp/deed.en_US">CC BY-ND 2.1 JP</a>.
+						Photos by <a href="http://www.flickr.com/photos/94782828@N05/">&copy;Yuko Homma</a> licensed under <a href="http://creativecommons.org/licenses/by-nd/2.1/jp/deed.en_US">CC BY-ND 2.1 JP</a>.
 					</p>
 				</div>
 			</div>
