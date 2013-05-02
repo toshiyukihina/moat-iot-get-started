@@ -41,7 +41,20 @@ try {
 
 function save(entity) {
 	// Now the given model object is stored into the database.
-	var result = database.insert(entity);
+	var result;
+	if (entity.uid) {
+		// try to find
+		var array = database.queryByUids('ZigBeeDevice', [entity.uid]);
+		if (array && array.length > 0) {
+			// Copy revision
+			entity.rev = array[0].rev;
+			result = database.update(entity);
+		} else {
+			result = database.insert(entity);
+		}
+	} else {
+		result = database.insert(entity);
+	}
 	// The inserted object is internally associated with the device
 	// where the
 	// data origins.

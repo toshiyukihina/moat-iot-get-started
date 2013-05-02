@@ -15,3 +15,4 @@
 //= require_tree .
 
 //= require bootstrap/bootstrap.min
+//= require gallery

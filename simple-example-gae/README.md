@@ -4,7 +4,7 @@ Simple Example Google App Engine Application
 --------
 
 This application can be deployed on Google App Engine and is already applied Twitter Bootstrap 2.2.2.
-The version of Google App Engine SDK used here is 1.7.6.
+The version of Google App Engine SDK used here is 1.7.6/1.7.7.1.
 
 See [the tutorial](http://dev.yourinventit.com/guides/get-started) to learn more.
 
@@ -17,7 +17,7 @@ In the Production mode, this application restricts access from the internet. You
 After `git clone` or download and unarchive the zip file from the [moat-iot-get-started](https://github.com/inventit/moat-iot-get-started) project, do the following.
 
   1. Install [Eclipse Juno (4.2)](http://www.eclipse.org/downloads/)
-  1. Install [Google App Engine Plugin (1.7.6)](https://developers.google.com/appengine/docs/java/tools/eclipse)
+  1. Install [Google App Engine Plugin (1.7.7.1)](https://developers.google.com/appengine/docs/java/tools/eclipse)
   1. Import this `simple-example-gae` project [from File > Import...](http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-importproject.htm)
   1. Run `build.xml` file at the `simple-example-gae` directory by right-clicking the `build.xml` and choosing `1 Ant Build`
 

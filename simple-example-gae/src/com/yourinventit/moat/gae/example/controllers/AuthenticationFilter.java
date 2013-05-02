@@ -37,6 +37,8 @@ public class AuthenticationFilter implements Filter {
 	private static final Logger LOGGER = Logger
 			.getLogger(AuthenticationFilter.class.getName());
 
+	static final String LOGIN_PATH = "/login.jsp";
+
 	/**
 	 * The constant value of the authenticated user id.
 	 */
@@ -67,23 +69,30 @@ public class AuthenticationFilter implements Filter {
 			LOGGER.info("[AUTH_SKIPPED] DEVELOPMENT MODE....");
 
 		} else {
-			final UserService userService = UserServiceFactory.getUserService();
-			final User user = userService.getCurrentUser();
-			if (userService.isUserLoggedIn() == false) {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				LOGGER.warning("[AUTH_ERROR] UserService.isUserLoggedIn() => false, User => "
-						+ user);
-				return;
-			}
-			if (user == null) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-				LOGGER.warning("[BAD_REQUEST] User => null");
-				return;
-			}
-			if (!GOOGLE_USER_ID.equals(user.getUserId())) {
-				LOGGER.warning("[AUTH_ERROR] User ID mismatch, userId => "
-						+ user.getUserId());
-				return;
+			final String pathInfo = request.getPathInfo();
+			if (pathInfo != null && !pathInfo.startsWith(LOGIN_PATH)) {
+				final UserService userService = UserServiceFactory
+						.getUserService();
+				final User user = userService.getCurrentUser();
+				if (userService.isUserLoggedIn() == false) {
+					LOGGER.warning("[AUTH_ERROR] UserService.isUserLoggedIn() => false, User => "
+							+ user);
+					request.getRequestDispatcher(LOGIN_PATH).forward(request,
+							response);
+					return;
+				}
+				if (user == null) {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+					LOGGER.warning("[BAD_REQUEST] User => null");
+					return;
+				}
+				if (!GOOGLE_USER_ID.equals(user.getEmail())) {
+					LOGGER.warning("[AUTH_ERROR] User Email mismatch, userEmail => "
+							+ user.getEmail());
+					request.getRequestDispatcher(LOGIN_PATH).forward(request,
+							response);
+					return;
+				}
 			}
 		}
 
