@@ -15,14 +15,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hoho.android.usbserial.util.HexDump;
 import com.yourinventit.dmc.api.moat.ContextFactory;
@@ -98,6 +102,43 @@ public class SampleApplication extends Activity implements
 	 */
 	private TextView textView;
 
+	private MoatIoTPubSubService mPubSubService;
+	
+	private ServiceConnection mPubSubServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName arg0, IBinder service) {
+			Toast.makeText(getApplicationContext(), "onServiceConnected", Toast.LENGTH_SHORT).show();
+			LOGGER.info("onServiceConnected()");
+			mPubSubService = ((MoatIoTPubSubService.MoatIoTPubSubServiceBinder)service).getService();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			Toast.makeText(getApplicationContext(), "onServiceDisconnected", Toast.LENGTH_SHORT).show();
+			LOGGER.info("onServiceDisconnected()");
+			mPubSubService = null;
+		}
+
+	};
+	
+	private void doBindPubSubService() {
+		bindService(new Intent(SampleApplication.this, MoatIoTPubSubService.class), 
+				mPubSubServiceConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+	private void doUnbindPubSubService() {
+		unbindService(mPubSubServiceConnection);
+	}
+	
+	private void doPublish(String payload) {
+		if (mPubSubService != null) {
+			mPubSubService.publish(payload);
+		} else {
+			LOGGER.warn("MoatIoTPubSubService is not connected yet.");
+		}
+	}
+	
 	/**
 	 * (static)
 	 * 
@@ -191,6 +232,9 @@ public class SampleApplication extends Activity implements
 		// Starting the MoatIoTService on this application starting up.
 		startService(new Intent(this, MoatIoTService.class));
 
+		// Stating the MoatIoTPubSubService on this application starting up.
+		doBindPubSubService();
+		
 		// USB Serial Device
 		usbSerialDevice = new UsbSerialDevice(
 				(UsbManager) getSystemService(Context.USB_SERVICE), this);
@@ -266,6 +310,7 @@ public class SampleApplication extends Activity implements
 		super.onDestroy();
 		usbSerialDevice.closeUsbSerialDriver();
 		stopService(new Intent(this, MoatIoTService.class));
+		doUnbindPubSubService();
 	}
 
 	/**
@@ -322,10 +367,6 @@ public class SampleApplication extends Activity implements
 	 */
 	@Override
 	public void onNewData(byte[] data) {
-		final String dataString = new String(data);
-		LOGGER.info("[onNewData:IN] Read bytes: {}, Text: {}", data.length,
-				dataString);
-		//String additionalInfo = "Nothing Done.\n";
 		for (int i = 0; i < data.length; i++) {
 			if (isDelimiter(data[i])) {
 				if (isInEmpty() || isNotInitialized()) {
@@ -335,32 +376,11 @@ public class SampleApplication extends Activity implements
 				resetIn();
 				final String message = new String(payload);
 				appendText(message + "\n");
-//				final ZigBeeDevice zigBeeDevice = getZigBeeDeviceModelMapper()
-//						.findByUid(ZIGBEE_DEVICE_UID);
-//				LOGGER.info(
-//						"[onNewData] ZigBee Device data is missing. Message => {}",
-//						HexDump.dumpHexString(payload));
-//				if (zigBeeDevice == null) {
-//					continue;
-//				}
-//				final String message = new String(payload);
-//				LOGGER.info("[onNewData] message => {}", message);
-//				if (message.startsWith("TEMP:")) {
-//					additionalInfo += performTemperatureResponse(zigBeeDevice,
-//							message);
-//				} else if ("CLICKED:TRUE".equals(message)) {
-//					additionalInfo += performClicked(zigBeeDevice);
-//				} else if (message.endsWith(":OK\n")) {
-//					LOGGER.warn("[onNewData] Response => {}", message);
-//				} else {
-//					LOGGER.warn("[onNewData] Unknown message. Ignored.");
-//				}
+				doPublish(message);
 			} else {
 				getIn().write(data[i]);
 			}
 		}
-		//final String line = additionalInfo;
-		//appendText("[ZB] => " + line);
 	}
 
 	/**

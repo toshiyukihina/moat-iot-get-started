@@ -10,3 +10,4 @@ simple-example-android-arduino/target
 simple-example-gae/war/WEB-INF/lib
 simple-example-gae/war/WEB-INF/classes
 simple-example-gae/war/WEB-INF/appengine-generated
+simple-example-js/simple-example/pkg
