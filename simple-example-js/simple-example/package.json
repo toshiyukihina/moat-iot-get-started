@@ -45,6 +45,16 @@
 				"showTextOnLcd" : {"paramType" : "string"},
 				"inquireTemperature" : {"paramType" : null}
 			}
-		}
+		},
+    "SensingData": {
+			"array" : true,
+			"attributes" : {
+        "i" : {"type" : "int64"},
+        "x" : {"type" : "float"},
+        "y" : {"type" : "float"},
+        "z" : {"type" : "float"},
+        "tsi" : {"type" : "float"}
+      }
+    }
 	}
 }
