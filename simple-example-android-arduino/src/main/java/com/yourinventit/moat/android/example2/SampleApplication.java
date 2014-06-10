@@ -325,7 +325,7 @@ public class SampleApplication extends Activity implements
 		final String dataString = new String(data);
 		LOGGER.info("[onNewData:IN] Read bytes: {}, Text: {}", data.length,
 				dataString);
-		String additionalInfo = "Nothing Done.\n";
+		//String additionalInfo = "Nothing Done.\n";
 		for (int i = 0; i < data.length; i++) {
 			if (isDelimiter(data[i])) {
 				if (isInEmpty() || isNotInitialized()) {
@@ -333,32 +333,34 @@ public class SampleApplication extends Activity implements
 				}
 				final byte[] payload = getIn().toByteArray();
 				resetIn();
-				final ZigBeeDevice zigBeeDevice = getZigBeeDeviceModelMapper()
-						.findByUid(ZIGBEE_DEVICE_UID);
-				LOGGER.info(
-						"[onNewData] ZigBee Device data is missing. Message => {}",
-						HexDump.dumpHexString(payload));
-				if (zigBeeDevice == null) {
-					continue;
-				}
 				final String message = new String(payload);
-				LOGGER.info("[onNewData] message => {}", message);
-				if (message.startsWith("TEMP:")) {
-					additionalInfo += performTemperatureResponse(zigBeeDevice,
-							message);
-				} else if ("CLICKED:TRUE".equals(message)) {
-					additionalInfo += performClicked(zigBeeDevice);
-				} else if (message.endsWith(":OK\n")) {
-					LOGGER.warn("[onNewData] Response => {}", message);
-				} else {
-					LOGGER.warn("[onNewData] Unknown message. Ignored.");
-				}
+				appendText(message + "\n");
+//				final ZigBeeDevice zigBeeDevice = getZigBeeDeviceModelMapper()
+//						.findByUid(ZIGBEE_DEVICE_UID);
+//				LOGGER.info(
+//						"[onNewData] ZigBee Device data is missing. Message => {}",
+//						HexDump.dumpHexString(payload));
+//				if (zigBeeDevice == null) {
+//					continue;
+//				}
+//				final String message = new String(payload);
+//				LOGGER.info("[onNewData] message => {}", message);
+//				if (message.startsWith("TEMP:")) {
+//					additionalInfo += performTemperatureResponse(zigBeeDevice,
+//							message);
+//				} else if ("CLICKED:TRUE".equals(message)) {
+//					additionalInfo += performClicked(zigBeeDevice);
+//				} else if (message.endsWith(":OK\n")) {
+//					LOGGER.warn("[onNewData] Response => {}", message);
+//				} else {
+//					LOGGER.warn("[onNewData] Unknown message. Ignored.");
+//				}
 			} else {
 				getIn().write(data[i]);
 			}
 		}
-		final String line = additionalInfo;
-		appendText("[ZB] => " + line);
+		//final String line = additionalInfo;
+		//appendText("[ZB] => " + line);
 	}
 
 	/**

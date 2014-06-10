@@ -86,6 +86,11 @@
 			<version>20090211</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.fusesource.mqtt-client</groupId>
+			<artifactId>mqtt-client</artifactId>
+			<version>1.10</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
