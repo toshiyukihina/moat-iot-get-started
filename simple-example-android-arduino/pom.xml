@@ -75,7 +75,9 @@
 		<dependency>
 			<groupId>com.hoho</groupId>
 			<artifactId>usb-serial-for-android</artifactId>
-			<version>v010</version>
+            <version>v0.1.0-5c8a655-inventit-0.1.0</version>
+            <url>https://github.com/inventit/usb-serial-for-android</url>
+            <name>USB Serial Driver for Android</name>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

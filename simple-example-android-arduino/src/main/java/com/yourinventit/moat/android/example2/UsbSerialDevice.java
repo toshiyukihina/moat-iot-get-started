@@ -100,7 +100,10 @@ public class UsbSerialDevice {
 			stopSerialInputOutputManager();
 			if (usbSerialDriver != null) {
 				usbSerialDriver.open();
-				usbSerialDriver.setBaudRate(BAUD_RATE);
+				usbSerialDriver.setParameters(BAUD_RATE, 
+				UsbSerialDriver.DATABITS_8, 
+				UsbSerialDriver.STOPBITS_1, 
+				UsbSerialDriver.PARITY_NONE);
 			}
 
 		} catch (IOException exception) {
